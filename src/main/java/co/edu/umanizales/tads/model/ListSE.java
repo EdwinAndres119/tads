@@ -3,8 +3,6 @@ package co.edu.umanizales.tads.model;
 import co.edu.umanizales.tads.controller.dto.KidDTO;
 import lombok.Data;
 
-import java.util.ArrayList;
-
 @Data
 public class ListSE {
     private Node head;
@@ -133,19 +131,33 @@ public class ListSE {
     el ayudante en la cabeza
     /*
      */
-    public void orderBygender(char gender) {
-        ListSE LisSE1 = new ListSE();
+    public void orderBygender() {
+        ListSE listSE1 = new ListSE();
         Node temp = head;
         int sum = 0;
-        while (temp != null && temp.getNext().getData().getGender() == 'F') {
-            LisSE1.addToStart(temp.getData());
+        if (head==null){
+            System.out.println("no hay datos");
+        }else{
+            while(temp!=null){
+                if(temp.getData().getGender() == 'F'){
+                    listSE1.addToStart(temp.getData());
+                }
+                temp = temp.getNext();
+            }
+            temp = head;
+            while (temp !=null){
+                if(temp.getData().getGender() == 'M') {
+                    listSE1.addInPos(temp.getData(),sum);
+                    temp =temp.getNext();
+                    sum = sum+2;
+                } else {
+                    temp = temp.getNext();
+                }
+
+            }
+            this.head = listSE1.getHead();
         }
-        while (temp != null && temp.getNext().getData().getGender() == 'M') {
-            sum = sum + 2;
-            LisSE1.addInPos(temp.getData(), sum);
-            temp.getNext();
-        }
-        this.head = LisSE1.getHead();
+
     }
 //---------------------------------end the metod order by gender-------------------------------------------------- //
 
@@ -166,7 +178,9 @@ public class ListSE {
             }
 
         }
-
+     sum = lose + getPosByid(id);
+        listSE1.addInPositionVali(getKidById(id), sum);
+        this.head = listSE1.getHead();
     }
 
 //---------------------------------end the metod lose positionsp-------------------------------------------------- //
@@ -233,6 +247,138 @@ public class ListSE {
       }
       return found ? 1 : 0;
     }
+
+    public void addInPositionVali(Kid kid, int pos2){
+        Node temp = head;
+        Node newNode = new Node(kid);
+        int listlength = getlistlength();
+        if (pos2 < 0 || pos2 >= listlength)
+            add(kid);
+        if(pos2 == 0){
+            newNode.setNext(head);
+            head =newNode;
+        }else{
+            for(int i = 0; temp.getNext() !=null && i < pos2 -1; i++){
+                temp = temp.getNext();
+
+            }
+            newNode.setNext(temp.getNext());
+            temp.setNext(newNode);
+        }
+    }
+
+    public int getlistlength(){
+        int total = 0;
+        Node actu = head;
+        while (actu!=null){
+            total++;
+            actu = actu.getNext();
+        }
+        return total;
+    }
+    public void putKidsBeginning(){
+        Node temp = this.head;
+        ListSE listSE1 = new ListSE();
+        if (this.head != null){
+            while (head !=null){
+                if (temp.getData().getGender() == 'M'){
+                    listSE1.addToStart(temp.getData());
+                } else if (temp.getData().getGender() == 'F') {
+                    listSE1.add(temp.getData());
+                }
+               temp = temp.getNext();
+            }
+         this.head = listSE1.getHead();
+        }
+    }
+    public void WinPos(String id , int earn){
+        Node temp = head;
+        int sum = 0;
+        ListSE listSE1 = new ListSE();
+        if(head != null){
+            while(temp !=null){
+                if(!temp.getData().getIdentification().equals(id)){
+                    listSE1.add(temp.getData());
+                    temp = temp.getNext();
+                }else{
+                    temp = temp.getNext();
+                }
+            }
+        }
+        sum = getPosByid(id)- earn;
+        listSE1.addInPositionVali(getKidById(id),sum);
+        this.head = listSE1.getHead();
+    }
+    public int getCountKidByLocationCode(String code){
+        int count = 0 ;
+        if(this.head !=null){
+            Node temp = this.head;
+            while (temp!=null){
+                if(temp.getData().getLocation().getCode().equals(code)){
+                    count++;
+                }
+                temp = temp.getNext();
+            }
+        }
+        return count;
+    }
+    public String ReportByage(){
+        int quantity1 = 0;
+        int quantity2 = 0;
+        int quantity3 = 0;
+        int quantity4 = 0;
+        int quantity5 = 0;
+        Node temp = this.head;
+        if(this.head !=null){
+            while(temp !=null){
+                if(temp.getData().getAge()>= 0 && temp.getData().getAge()<~3){
+
+                } else if (temp.getData().getAge()>3 && temp.getData().getAge()<=6) {
+
+                } else if (temp.getData().getAge()>6 && temp.getData().getAge()<=9) {
+
+                } else if (temp.getData().getAge()>9 && temp.getData().getAge()<=12) {
+
+                } else if (temp.getData().getAge()>12 && temp.getData().getAge()<=15) {
+                    quantity5++;
+                }
+            temp = temp.getNext();
+            }
+        }
+        return "los niños entre 0-3 años:"+ quantity1 +
+        "los niños entre 3-6 años:"+ quantity2 +
+        "los niños entre 6-9 años:"+ quantity3 +
+        "los niños entre 9-12 años:"+ quantity4 +
+        "los niños entre 12-15 años:"+ quantity5;
+
+    }
+    public int getCountKidByLocCodeFemale(String code){
+        int female =0;
+        if( this.head!=null){
+            Node temp = this.head;
+            while(temp != null){
+                if(temp.getData().getLocation().getCode().equals(code)&&temp.getData().getGender() == 'F'){
+                    female++;
+                }
+                temp = temp.getNext();
+            }
+        }
+        return female;
+    }
+    public int getCountKidByLocCodeMale(String code){
+        int male =0;
+        if( this.head!=null){
+            Node temp = this.head;
+            while(temp != null){
+                if(temp.getData().getLocation().getCode().equals(code)&&temp.getData().getGender() == 'M'){
+                    male++;
+                }
+                temp = temp.getNext();
+            }
+        }
+        return male;
+    }
+
 
 }
 

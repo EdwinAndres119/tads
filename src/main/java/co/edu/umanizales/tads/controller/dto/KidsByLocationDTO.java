@@ -8,5 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class KidsByLocationDTO {
     private Location location;
+    private int Female;
+    private int Male;
     private int quantity;
 }
