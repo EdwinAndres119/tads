@@ -3,6 +3,7 @@ package co.edu.umanizales.tads.controller;
 import co.edu.umanizales.tads.controller.dto.KidDTO;
 import co.edu.umanizales.tads.controller.dto.KidsByLocationDTO;
 import co.edu.umanizales.tads.controller.dto.ResponseDTO;
+import co.edu.umanizales.tads.exception.ListSEException;
 import co.edu.umanizales.tads.model.Kid;
 import co.edu.umanizales.tads.model.Location;
 import co.edu.umanizales.tads.service.LocationService;
@@ -46,10 +47,9 @@ public class ListSEController {
                 null), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<ResponseDTO> addKid(@RequestBody KidDTO kidDTO){
-        Location location = LocationService.getLocationByCode(kidDTO.getCodeLocation());
-
+    public ResponseEntity<ResponseDTO> addKid(@RequestBody KidDTO kidDTO) {
+        try {
+            Location location = LocationService.getLocationByCode(kidDTO.getCodeLocation());
             if (location == null) {
                 return new ResponseEntity<>(new ResponseDTO(
                         404, "La ubicación no existe",
@@ -61,8 +61,12 @@ public class ListSEController {
             return new ResponseEntity<>(new ResponseDTO(
                     200, "Se ha adicionado el petacón",
                     null), HttpStatus.OK);
-
+        } catch (ListSEException e) {
+            return new ResponseEntity<>(new ResponseDTO(
+                    400, e.getMessage(),
+                    null), HttpStatus.OK);
         }
+    }
 
     @GetMapping(path = "/deletekig/{id}")
     public ResponseEntity<ResponseDTO>deleteKidbyage(byte age){
@@ -99,20 +103,20 @@ public class ListSEController {
                 200, "Niños con esa edad eliminados", null), HttpStatus.OK);
     }
     @GetMapping(path = "/orderByGender")
-    public ResponseEntity<ResponseDTO> orderByGender() {
+    public ResponseEntity<ResponseDTO> orderByGender() throws ListSEException {
         listSEService.orderByGender();
         return new ResponseEntity<>(new ResponseDTO(
                 200, "los niños fueron ordenados" , null), HttpStatus.OK);
     }
 
     @GetMapping(path = "/kids_to_beginning")
-    public ResponseEntity<ResponseDTO> putKidsBeginning() {
+    public ResponseEntity<ResponseDTO> putKidsBeginning() throws ListSEException {
         listSEService.putKidsBeginning();
         return new ResponseEntity<>(new ResponseDTO(
                 200, "niños agregados al inicio y niñas agregadas al final", null), HttpStatus.OK);
     }
     @PostMapping(path = "/earn_positions")
-    public ResponseEntity<ResponseDTO> WinPos(@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<ResponseDTO> WinPos(@RequestBody Map<String, Object> requestBody)throws ListSEException {
         String id = (String) requestBody.get("id");
         Integer earn = (Integer) requestBody.get("earn");
         listSEService.WinPos(id, earn);
@@ -124,7 +128,7 @@ public class ListSEController {
         return new ResponseEntity<>(new ResponseDTO(200, listSEService.ReportByage(), null), HttpStatus.OK);
     }
     @PostMapping(path = "/lose_positions")
-    public ResponseEntity<ResponseDTO> losePosition(@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<ResponseDTO> losePosition(@RequestBody Map<String, Object> requestBody) throws ListSEException {
         String id = (String) requestBody.get("id");
         Integer lose = (Integer) requestBody.get("lose");
         listSEService.losePosition(id,lose);
@@ -147,6 +151,23 @@ public class ListSEController {
         }
         return new ResponseEntity<>(new ResponseDTO(
                 200,kidsByLocationDTOList,
+                null), HttpStatus.OK);
+    }
+    @GetMapping(path = "/pets_by_locations/{age}")
+    public ResponseEntity<ResponseDTO> getKidsByLocation(@PathVariable byte age){
+        List<KidsByLocationDTO> kidsByLocationDTO = new ArrayList<>();
+        for(Location loc: LocationService.getLocations()){
+            if (listSEService.getKids().getData().getAge() > age) {
+                int count = listSEService.getCountKidByLocationCode(loc.getCode());
+                int male = listSEService.getCountKidByLocCodeMale(loc.getCode());
+                int female = listSEService.getCountKidByLocCodeFemale(loc.getCode());
+                if (count > 0) {
+                    kidsByLocationDTO.add(new KidsByLocationDTO(loc, female, male, count));
+                }
+            }
+        }
+        return new ResponseEntity<>(new ResponseDTO(
+                200,kidsByLocationDTO,
                 null), HttpStatus.OK);
     }
 }

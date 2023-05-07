@@ -1,6 +1,7 @@
 package co.edu.umanizales.tads.model;
 
 import co.edu.umanizales.tads.controller.dto.KidDTO;
+import co.edu.umanizales.tads.exception.ListSEException;
 import lombok.Data;
 
 @Data
@@ -25,11 +26,20 @@ public class ListSE {
     no
         metemos el niño en el costal y ese costal es la cabeza
      */
-    public void add(Kid kid) {
+    public void add(Kid kid) throws ListSEException {
+        if (kid == null) {
+            throw new ListSEException("400", "No se puede agregar un niño nulo a la lista");
+        }
         if (head != null) {
             Node temp = head;
             while (temp.getNext() != null) {
+                if(temp.getData().getIdentification().equals(kid.getIdentification())){
+                    throw new ListSEException("400","Ya existe un niño con ese codigo");
+                }
                 temp = temp.getNext();
+            }
+            if(temp.getData().getIdentification().equals(kid.getIdentification())){
+                throw new ListSEException("400","Ya existe un niño con ese codigo");
             }
             /// Parado en el último
             Node newNode = new Node(kid);
@@ -94,7 +104,7 @@ public class ListSE {
         size--;
     }
 
-    public void addInPos(Kid kid, int pos) {
+    public void addInPos(Kid kid, int pos) throws ListSEException {
         Node temp = head;
         Node newNode = new Node(kid);
         int listLength = getLength();
@@ -131,7 +141,7 @@ public class ListSE {
     el ayudante en la cabeza
     /*
      */
-    public void orderBygender() {
+    public void orderBygender() throws ListSEException {
         ListSE listSE1 = new ListSE();
         Node temp = head;
         int sum = 0;
@@ -162,7 +172,7 @@ public class ListSE {
 //---------------------------------end the metod order by gender-------------------------------------------------- //
 
 
-    public void losePosition(String id, int lose) {
+    public void losePosition(String id, int lose) throws ListSEException {
         Node temp = head;
         int sum = 0;
         ListSE listSE1 = new ListSE();
@@ -248,7 +258,7 @@ public class ListSE {
       return found ? 1 : 0;
     }
 
-    public void addInPositionVali(Kid kid, int pos2){
+    public void addInPositionVali(Kid kid, int pos2) throws ListSEException {
         Node temp = head;
         Node newNode = new Node(kid);
         int listlength = getlistlength();
@@ -276,7 +286,7 @@ public class ListSE {
         }
         return total;
     }
-    public void putKidsBeginning(){
+    public void putKidsBeginning() throws ListSEException {
         Node temp = this.head;
         ListSE listSE1 = new ListSE();
         if (this.head != null){
@@ -291,7 +301,7 @@ public class ListSE {
          this.head = listSE1.getHead();
         }
     }
-    public void WinPos(String id , int earn){
+    public void WinPos(String id , int earn) throws ListSEException {
         Node temp = head;
         int sum = 0;
         ListSE listSE1 = new ListSE();
