@@ -38,12 +38,10 @@ public class ListSE {
                 }
                 temp = temp.getNext();
             }
-            if(temp.getData().getIdentification().equals(kid.getIdentification())){
-                throw new ListSEException("400","Ya existe un niño con ese codigo");
-            }
-            /// Parado en el último
             Node newNode = new Node(kid);
             temp.setNext(newNode);
+            /// Parado en el último
+
         } else {
             head = new Node(kid);
         }
