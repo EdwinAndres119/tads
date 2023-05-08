@@ -54,11 +54,58 @@ public class ListDE {
         }
         size--;
     }
+    /*
+    METODO PARA ELIMINAR EN SITIO DE LA LISTADE
+    en este metodo necesito al ayudante de que me recorra la listade que este se pone principalmente en la cabeza de
+    la lista (tambien necesito un parametro  que me identifique al objeto que debo eliminar principalmente esta puede ser el ID de la
+    mascota)
+    esta hacion se inicia mientras las que el temporal se diferente de null tambien debo tener en cuentas cuando este recorre la lista y
+    debo tener en cuenta que si el ayudante llega al final de la lista no de error
+    si encontro la id y coincide con la id requqerida para la esto se deben actulizar los datos previos y siguientes de la lista para
+    asi no perder los datos
+    tambien debo tener en cuenta que si el nodo a eliminar es la cabeza se debe actualizar los enlaces de este primer dato para que asi
+    el siguiente dato quede como la cabeza y no perder la lista
+    pero si se cumple los datos de la id con el que encontro el temp debe actualizar los enlaces que tiene este con el previus y next
+    y para realizar este metodo puedo reutilizar este metodo de deletePet pero agregando el dato que se necesita eliminar que nos los daria la
+    id necesaria para esto y asi no perder los datos ya de la listaDE
+    -Debo tener en cuenta si la id o la mascota que se quiere eliminar es cabeza debe se debe actualizar y colocar una nueva cabeza el dato siguiente
+    -Debo tener tambien en cuenta que si el dato que se quiere eliminar es del final
+    Creo que en este metodo tambien puedo combinar dos metodos tanto el de deletePet que tienee en cuenta si es cabeza el dato al eliminar
+    y si esta tambien esta al final y el otro que le puedo utilizar es de addPetInPos ya que en esta nos la una posicion determinada
+
+     RemovePetInPosition
+     */
+    public void RemovePetInPosition(String phone, int pos1) {
+        if (pos1 < 0 || pos1 >= size){
+
+        }
+
+        NodeDE empt = null;
+        NodeDE temp = head;
+
+        for (int i = 0; temp.getNext() != null && i < pos1 - 1; i++) {
+            temp = temp.getNext();
+        }
+
+        while (temp != null && !temp.getData().getOwnernumb().equals(phone)) {
+        }
+
+        if (empt == null) {
+            head = temp.getNext();
+        } else {
+            empt.setNext(temp.getNext());
+        }if (temp.getNext() !=null){
+            temp.getNext().setPrevious(empt);
+        }
+        size--;
+    }
+
+
     public void addPetInPos(Pet pet, int pos2) {
         NodeDE temp = head;
         NodeDE newNode = new NodeDE(pet);
 
-        if (pos2 < 0 || pos2 >= size)//to do a validation and add the kid in the last position
+        if (pos2 < 0 || pos2 >= size)
             addPet(pet);
         if (pos2 == 0) {
             addPetToBeginning(pet);

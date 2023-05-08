@@ -36,6 +36,6 @@ public class ListDEservice {
     public int getCountPetByLocCodeMale(String code){return pets.getCountPetByLocCodeMale(code);}
     public int getCountPetByLocCodeFemale(String code){return pets.getCountPetByLocCodeFemale(code);}
 
-
+    public void RemovePetInPosition(String Phone){pets.deletePet(Phone);}
     public void sendPetsToEndByChar(char user) {pets.sendPetsToEndByChar(user);}
 }

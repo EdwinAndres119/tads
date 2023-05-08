@@ -68,7 +68,7 @@ public class ListDEcontroller {
     public ResponseEntity<ResponseDTO>deletePet(@PathVariable String name) {
         lisDEService.deletePet(name);
         return new ResponseEntity<>(new ResponseDTO(
-                200, "Niño eliminado", null), HttpStatus.OK);
+                200, "mascota eliminada", null), HttpStatus.OK);
     }
     @GetMapping(path = "/kidsbyCity/{age}")
     public ResponseEntity<ResponseDTO> getPetsByCity(@PathVariable byte age){
@@ -183,4 +183,9 @@ public class ListDEcontroller {
     public ResponseEntity<ResponseDTO>  ReportByage(){
         return new ResponseEntity<>(new ResponseDTO(200, lisDEService.ReportByage(), null), HttpStatus.OK);
     }
+    @GetMapping(path = "/delete_kid/{id}")
+    public ResponseEntity<ResponseDTO>RemovePetInPosition(@PathVariable String Phone) {
+        lisDEService.RemovePetInPosition(Phone);
+        return new ResponseEntity<>(new ResponseDTO(
+                200, "mascota eliminada", null), HttpStatus.OK);
 }
