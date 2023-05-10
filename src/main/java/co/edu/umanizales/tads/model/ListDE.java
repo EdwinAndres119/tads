@@ -10,6 +10,15 @@ import lombok.Data;
 public class ListDE {
     private NodeDE head;
     private int size;
+
+    /*
+METODO AÑADIR UNA MASCOTA:
+en este metodo es necesario los datos necesarios para completar por
+Este metodo utiliza una función llamada añadir mascota que agrega una nueva mascota a una lista de mascotas
+Si la lista ya tiene una mascota con el mismo número de dueño que la nueva mascota que se está agregando, entonces la función lanzará una excepción.
+En caso contrario, la nueva mascota se agregará a la lista y se incrementará el tamaño de la listaDE.
+Lo que significa que cada nodo en la lista tiene referencias tanto al nodo anterior como al siguiente en la lista.
+ */
     public void addPet(Pet pet) throws ListDeException {
         if (this.head != null) {
             NodeDE temp = this.head;
@@ -39,6 +48,27 @@ public class ListDE {
         this.head = newNode;
         size++;
     }
+    /*
+ deletePet que busca y elimina una mascota de una lista doblemente enlazada de mascotas.La búsqueda se debe hacer en
+ base al número de teléfono del propietario de la mascota. Si se encuentra una mascota
+ con el número de teléfono especificado, se elimina el nodo que la contiene de la lista.
+
+Para poder hacer la búsqueda, debo utiliza un bucle que recorre la lista, comparando el número
+de teléfono de cada mascota con el número de teléfono que nos da el usuario que quiere elimianr .
+Si se encuentra la mascota,
+el nodo que la contiene a esta mascota se elimina de la lista. Si no se encuentra la mascota,
+se lanza una excepción
+que indica que la mascota no se encuentra en la lista.
+
+cuando se elimina del nodo debo hacer una actualizando de las referencias de los nodos vecinos en la lista.
+Si el nodo que contiene la mascota a eliminar es la cabeza en la lista, se actualiza, Si no es el primer nodo,
+se actualiza con el del nodo anterior al nodo pero si es el
+siguiente al nodo que se está eliminando, para que la lista doblemente, siga siendo válida. Además,
+si nuestro nodo siguiente al nodo que se está eliminando existe, se actualiza su referencia al nodo anterior para
+mantener la lista doble.
+
+Finalmente, después de eliminar el nodo, se disminuye el tamaño de la lista.
+     */
     public void deletePet(String phone) throws ListDeException {
         NodeDE empt = null;
         NodeDE temp = head;
@@ -114,10 +144,21 @@ if (this.head !=null){
     size--;
 } else {
     throw new ListDeException("404", "No hay datos en la lista, no se pueden eliminar nodos");
-}
-}
+   }
+ }
+/*
+ALGORITMO ADDPETINPOS:
+addPetInPos que agrega una nueva mascota en una posición específica en una
+lista doblemente enlazada de mascotas. La posición deseada se especifica mediante un parámetro pos2.
 
+primero creo un nuevo nodo con la mascota que se va a agregar y luego busca el nodo en la
+posición deseada en la lista, para luego colocar el nuevo nodo en ese lugar. Si la posición especificada
+es menor que cero o mayor o igual que el tamaño de la lista, la nueva mascota se  debe agregará al final de la lista.
+ Si la posición especificada es cero, la nueva mascota se agregará al principio de la lista.
 
+ despues que se ha insertado el nuevo nodo en la lista, se actualizan las referencias de los nodos vecinos
+ para asegurar que la lista doblemente enlazada se mantenga y al final, se incrementa el tamaño de la lista.
+ */
 
 
     public void addPetInPos(Pet pet, int pos2) {
