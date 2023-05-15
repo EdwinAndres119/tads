@@ -5,6 +5,8 @@ import co.edu.umanizales.tads.exception.ListDeException;
 import co.edu.umanizales.tads.exception.ListSEException;
 import lombok.Data;
 
+import java.util.ArrayList;
+
 
 @Data
 public class ListDE {
@@ -531,5 +533,18 @@ es menor que cero o mayor o igual que el tamaño de la lista, la nueva mascota s
             throw new ListDeException("400","no hay datos en la lista");
         }
         this.head = listDE1.getHead();
+    }
+    public ArrayList<Pet> showList() {
+        ArrayList<Pet> pets = new ArrayList<>();
+        if (this.head != null) {
+            NodeDE temp = this.head;
+
+            do {
+                pets.add(temp.getData());
+                temp = temp.getNext();
+            } while (temp != null);
+        }
+        return pets;
+
     }
 }

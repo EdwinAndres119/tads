@@ -4,16 +4,19 @@ import co.edu.umanizales.tads.controller.dto.KidDTO;
 import co.edu.umanizales.tads.controller.dto.KidsByLocationDTO;
 import co.edu.umanizales.tads.controller.dto.ResponseDTO;
 import co.edu.umanizales.tads.exception.ListSEException;
+import co.edu.umanizales.tads.exception.RequestException;
 import co.edu.umanizales.tads.model.Kid;
 import co.edu.umanizales.tads.model.Location;
 import co.edu.umanizales.tads.service.LocationService;
 import co.edu.umanizales.tads.service.ListSEService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +50,8 @@ public class ListSEController {
                 null), HttpStatus.OK);
     }
 
-    public ResponseEntity<ResponseDTO> addKid(@RequestBody KidDTO kidDTO) {
+    @PostMapping
+    public ResponseEntity<ResponseDTO> addKid(@RequestBody @Valid @NotNull KidDTO kidDTO) throws ListSEException {
         try {
             Location location = LocationService.getLocationByCode(kidDTO.getCodeLocation());
             if (location == null) {
@@ -56,15 +60,14 @@ public class ListSEController {
                         null), HttpStatus.OK);
             }
             listSEService.add(
-                    new Kid(kidDTO.getIdentification(), kidDTO.getName(), kidDTO.getAge(),
+                    new Kid(kidDTO.getIdentification(),
+                            kidDTO.getName(), kidDTO.getAge(),
                             kidDTO.getGender(), location));
             return new ResponseEntity<>(new ResponseDTO(
                     200, "Se ha adicionado el petacón",
                     null), HttpStatus.OK);
         } catch (ListSEException e) {
-            return new ResponseEntity<>(new ResponseDTO(
-                    400, e.getMessage(),
-                    null), HttpStatus.OK);
+            throw new RequestException(e.getCode(), e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

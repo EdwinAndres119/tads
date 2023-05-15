@@ -9,10 +9,12 @@ import co.edu.umanizales.tads.model.Pet;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Data
 @Service
 public class ListDEservice {
-    private ListDE pets;
+    private static ListDE pets;
 
     public ListDEservice() {
         pets = new ListDE();
@@ -39,4 +41,5 @@ public class ListDEservice {
     public void deleteByAge(byte age)throws ListDeException{pets.deleteByAge(age);}
     public void RemovePetInPosition(String Phone, int pos1) throws ListDeException, ListSEException {pets.RemovePetInPosition(Phone, pos1);}
     public void sendPetsToEndByChar(char user) {pets.sendPetsToEndByChar(user);}
+    public ArrayList<Pet> showList() {return pets.showList();}
 }

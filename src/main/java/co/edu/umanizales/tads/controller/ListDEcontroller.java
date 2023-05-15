@@ -72,14 +72,14 @@ public class ListDEcontroller {
         }
     }
 
-    @PostMapping (path = "/delete_pet/{id}")
+    @PostMapping(path = "/delete_pet/{id}")
     public ResponseEntity<ResponseDTO> deletePet(@PathVariable String id) throws ListDeException {
         try {
-            ListDEservice.deletePet(id);
+            lisDEService.deletePet(id);
             return new ResponseEntity<>(new ResponseDTO(
                     200, "Mascota eliminada", null), HttpStatus.OK);
-        }catch (ListDeException e){
-            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        } catch (ListDeException e) {
+            throw new RequestException(e.getCode(), e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -132,9 +132,9 @@ public class ListDEcontroller {
                         404, "La ubicación no existe",
                         null), HttpStatus.BAD_REQUEST);
             }
-            ListDEservice.addPetInPos(
+            lisDEService.addPetInPos(
                     new Pet(petDTO.getAge(),petDTO.getName(),petDTO.getGender(),
-                            petDTO.getOwnernumb(),petDTO.getBreed(),location));
+                            petDTO.getOwnernumb(),petDTO.getBreed(),location),pos);
             return new ResponseEntity<>(new ResponseDTO(
                     200, "Se ha adicionado el petacón",
                     null), HttpStatus.OK);

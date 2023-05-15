@@ -37,6 +37,7 @@ public class ListSEService {
     public int getCountKidByLocCodeFemale(String code){return kids.getCountKidByLocCodeFemale(code);}
 
     public int getCountKidByLocCodeMale(String code){return kids.getCountKidByLocCodeMale(code);}
+
 }
 
 
