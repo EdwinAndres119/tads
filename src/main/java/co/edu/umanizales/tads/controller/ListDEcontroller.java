@@ -35,20 +35,27 @@ public class ListDEcontroller {
     }
 
     @GetMapping("/invert")
-    public ResponseEntity<ResponseDTO> invert() {
-        lisDEService.invertList();
-        return new ResponseEntity<>(new ResponseDTO(
-                200, "SE ha invertido la lista",
-                null), HttpStatus.OK);
-
+    public ResponseEntity<ResponseDTO> invert() throws ListDeException{
+        try {
+            lisDEService.invertList();
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "SE ha invertido la lista",
+                    null), HttpStatus.OK);
+        }catch (ListDeException e){
+            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(path = "/change_extremes")
-    public ResponseEntity<ResponseDTO> changeExtremes() {
-        lisDEService.changeExtremes();
-        return new ResponseEntity<>(new ResponseDTO(
-                200, "SE han intercambiado los extremos",
-                null), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> changeExtremes() throws ListDeException{
+        try {
+            lisDEService.changeExtremes();
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "SE han intercambiado los extremos",
+                    null), HttpStatus.OK);
+        }catch (ListDeException e){
+            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping
@@ -85,42 +92,67 @@ public class ListDEcontroller {
 
 
     @GetMapping(path = "/lose_positions")
-    public ResponseEntity<ResponseDTO> losePositions(@RequestBody Map<String, Object> requestBody) {
-        String id = (String) requestBody.get("id");
-        Integer lose = (Integer) requestBody.get("lose");
-        lisDEService.losePositions(id, lose);
-        return new ResponseEntity<>(new ResponseDTO(
-                200, "posiciones reordenadas", null), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> losePositions(@PathVariable byte age) throws ListDeException {
+        try {
+            lisDEService.deletePetByage(age);
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "posiciones reordenadas", null), HttpStatus.OK);
+        }catch (ListDeException e){
+            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(path = "/orderByGender")
-    public ResponseEntity<ResponseDTO> orderByGender() {
-        lisDEService.orderByGender();
-        return new ResponseEntity<>(new ResponseDTO(
-                200, "los mascotas fueron ordenados", null), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> orderByGender() throws ListDeException{
+        try {
+
+
+            lisDEService.orderByGender();
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "los mascotas fueron ordenados", null), HttpStatus.OK);
+        }catch (ListDeException e){
+            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @GetMapping(path = "/kids_to_beginning")
-    public ResponseEntity<ResponseDTO> putPetBeginning() {
-        lisDEService.putPetsMaleToBeginning();
-        return new ResponseEntity<>(new ResponseDTO(
-                200, "mascotas agregadas al inicio y perras agregadas al final", null), HttpStatus.OK);
+    @GetMapping(path = "/put_pets_beginning")
+    public ResponseEntity<ResponseDTO> putPetBeginning() throws ListDeException{
+        try {
+            lisDEService.putPetsMaleToBeginning();
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "mascotas agregadas al inicio y perras agregadas al final", null), HttpStatus.OK);
+        }catch(ListDeException e){
+            throw new ListDeException(e.getCode(),e.getMessage());
+        }
+
     }
 
     @PostMapping(path = "/earn_positions")
-    public ResponseEntity<ResponseDTO> WinPos(@RequestBody Map<String, Object> requestBody) {
-        String id = (String) requestBody.get("id");
-        Integer earn = (Integer) requestBody.get("earn");
-        lisDEService.WinPos(id, earn);
-        return new ResponseEntity<>(new ResponseDTO(
-                200, "posiciones re ordenadas", null), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> WinPos(@RequestBody Map<String, Object> requestBody)throws ListDeException {
+        try {
+
+            String id = (String) requestBody.get("id");
+            Integer earn = (Integer) requestBody.get("earn");
+            lisDEService.WinPos(id, earn);
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "posiciones re ordenadas", null), HttpStatus.OK);
+        }catch (ListDeException e){
+            throw new ListDeException(e.getCode(),e.getMessage());
+        }
     }
 
     @PostMapping(path = "/add_pet_to_beginning")
-    public ResponseEntity<ResponseDTO> addPetToBeginning(@Valid @RequestBody Pet pet) {
-        lisDEService.addPetToBeginning(pet);
-        return new ResponseEntity<>(new ResponseDTO(
-                200, "Mascota agregada al inicio", null), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> addPetToBeginning(@Valid @RequestBody PetDTO petDTO) throws ListDeException{
+        try {
+            Location location = LocationService.getLocationByCode(petDTO.getCodeLocation());
+            if (location == null)
+                return new ResponseEntity<>(new ResponseDTO(404, "la ubicacion requerida no existe",null),HttpStatus.OK);
+
+        lisDEService.addPetToBeginning(new Pet(petDTO.getAge(),petDTO.getName(),petDTO.getGender(),petDTO.getOwnernumb(),petDTO.getBreed(),location) );
+        return new ResponseEntity<>(new ResponseDTO(200, "se adiciono el perro",null),HttpStatus.OK);
+        }catch (ListDeException e){
+            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping(path = "/add_pet_in_pos/{pos}")
@@ -147,29 +179,45 @@ public class ListDEcontroller {
     }
 
     @GetMapping(path = "/get_average_age")
-    public ResponseEntity<ResponseDTO> getHalfAgeDog() {
-        lisDEService.getHalfAgeDog();
-        return new ResponseEntity<>(new ResponseDTO(
-                200, "el promedio de edad de las mascotas es: " + lisDEService.getHalfAgeDog(), null), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> getHalfAgeDog() throws ListDeException {
+        try {
+            lisDEService.getHalfAgeDog();
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "el promedio de edad de las mascotas es: " + lisDEService.getHalfAgeDog(), null), HttpStatus.OK);
+        }catch (ListDeException e){
+            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping(path = "/send_pets_to_end_by_char")
     public ResponseEntity<ResponseDTO> sendPetsToEndByChar(@RequestBody Map<String, Object> requestData) {
-        String userString = (String) requestData.get("user");
-        char user = userString.toLowerCase().charAt(0);
-        lisDEService.sendPetsToEndByChar(user);
-        return new ResponseEntity<>(new ResponseDTO(
-                200, "mascotas ordenadas", null), HttpStatus.OK);
+        try {
+            String userString = (String) requestData.get("user");
+            char user = userString.toLowerCase().charAt(0);
+            lisDEService.sendPetsToEndByChar(user);
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "mascotas ordenadas", null), HttpStatus.OK);
+        }catch (ListDeException e){
+            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(path = "/generate_report_by_age")
-    public ResponseEntity<ResponseDTO> ReportByage() {
-        return new ResponseEntity<>(new ResponseDTO(200, lisDEService.ReportByage(), null), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> ReportByage() throws ListDeException{
+        try {
+            return new ResponseEntity<>(new ResponseDTO(200, lisDEService.ReportByage(), null), HttpStatus.OK);
+        }catch (ListDeException e){
+            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(path = "/delete_kid/{id}")
-    public ResponseEntity<ResponseDTO> RemovePetInPosition(@PathVariable String id, @RequestParam int pos1) throws ListSEException {
-        lisDEService.RemovePetInPosition(id, pos1);
+    public ResponseEntity<ResponseDTO> RemovePetInPosition(@PathVariable String id, @RequestParam int pos1) throws ListDeException {
+        try {
+            lisDEService.RemovePetInPosition(id, pos1);
+        } catch (ListSEException e) {
+            throw new RuntimeException(e);
+        }
         return new ResponseEntity<>(new ResponseDTO(200, "Mascota eliminada", null), HttpStatus.OK);
     }
     @GetMapping(path = "/kidsbyDepartment/{age}")

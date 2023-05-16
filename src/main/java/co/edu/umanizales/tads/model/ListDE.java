@@ -2,7 +2,6 @@ package co.edu.umanizales.tads.model;
 
 import co.edu.umanizales.tads.controller.dto.PetDTO;
 import co.edu.umanizales.tads.exception.ListDeException;
-import co.edu.umanizales.tads.exception.ListSEException;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -70,7 +69,29 @@ si nuestro nodo siguiente al nodo que se está eliminando existe, se actualiza s
 mantener la lista doble.
 
 Finalmente, después de eliminar el nodo, se disminuye el tamaño de la lista.
+
      */
+    public void deletePetByage(byte age) {
+        NodeDE temp = head;
+        ListDE listDE1 = new ListDE();
+        boolean found = false;
+        if (this.head !=null){
+            while (temp !=null) {
+                if(temp.getData().getAge()  != age ){
+                    listDE1.addPetToBeginning(temp.getData());
+                }else{
+                    found = true;
+                }
+                temp = temp.getNext();
+            }
+            if(!found) {
+                throw new ListDeException("404", "no hay datos con esa edad indicada");
+            }
+            this.head = listDE1.getHead();
+        }else{
+            throw new ListDeException("404", "no hay datos suficientes");
+        }
+    }
     public void deletePet(String phone) throws ListDeException {
         NodeDE empt = null;
         NodeDE temp = head;
@@ -114,7 +135,7 @@ Finalmente, después de eliminar el nodo, se disminuye el tamaño de la lista.
 
      RemovePetInPosition
      */
-    public void RemovePetInPosition(String phone, int pos1) throws ListSEException {
+    public void RemovePetInPosition(String phone, int pos1) throws ListDeException {
         if (pos1 < 0 || pos1 >= size){
 
         }

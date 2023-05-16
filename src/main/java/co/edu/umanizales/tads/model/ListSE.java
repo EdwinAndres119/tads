@@ -1,6 +1,7 @@
 package co.edu.umanizales.tads.model;
 
 import co.edu.umanizales.tads.controller.dto.KidDTO;
+import co.edu.umanizales.tads.exception.ListDeException;
 import co.edu.umanizales.tads.exception.ListSEException;
 import lombok.Data;
 
@@ -37,10 +38,14 @@ public class ListSE {
                     throw new ListSEException("400","Ya existe un niño con ese codigo");
                 }
                 temp = temp.getNext();
+
+
+            }
+            if (temp.getData().getIdentification().equals(kid.getIdentification())){
+                throw new ListSEException("400","Ya existe un niño con ese codigo");
             }
             Node newNode = new Node(kid);
             temp.setNext(newNode);
-            /// Parado en el último
 
         } else {
             head = new Node(kid);
@@ -297,10 +302,14 @@ public class ListSE {
                temp = temp.getNext();
             }
          this.head = listSE1.getHead();
+        }else {
+            throw new ListSEException("404","la lista no tiene datos para hacer esta accion ");
         }
+
     }
-    public void WinPos(String id , int earn) throws ListSEException {
+    public void WinPos(String id , int win) throws ListSEException {
         Node temp = head;
+        win = 0;
         int sum = 0;
         ListSE listSE1 = new ListSE();
         if(head != null){
@@ -313,7 +322,7 @@ public class ListSE {
                 }
             }
         }
-        sum = getPosByid(id)- earn;
+        sum = getPosByid(id)- win;
         listSE1.addInPositionVali(getKidById(id),sum);
         this.head = listSE1.getHead();
     }
@@ -387,7 +396,39 @@ public class ListSE {
         return male;
     }
 
+public double getAvereageAge()throws ListDeException{
+        double averageAge = 0;
+        Node temp = this.head;
+        if(this.head != null){
+            while (temp !=null){
+                averageAge = averageAge + temp.getData().getAge();
+                temp = temp.getNext();
+            }
+            averageAge = averageAge / getLength();
+            return averageAge;
 
+        }else{
+            throw new ListDeException("404", "la lista no tiene suficientes datos ");
+        }
+
+}
+public void sendKidsToByChar(char user)throws ListSEException {
+        ListSE listSE1 = new ListSE();
+        Node temp = this.head;
+        if (this.head != null){
+            while (temp !=null){
+                if (temp.getData().getName().charAt(0)!=user){
+                    listSE1.addToStart(temp.getData());
+                }else{
+                    listSE1.add(temp.getData());
+                }
+                temp = temp.getNext();
+            }
+        }else{
+            throw new ListSEException("404", "no hay suficientes datos en la lista ");
+        }
+        this.head = listSE1.getHead();
+}
 }
 
 

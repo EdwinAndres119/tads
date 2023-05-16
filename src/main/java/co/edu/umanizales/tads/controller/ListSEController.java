@@ -71,13 +71,13 @@ public class ListSEController {
         }
     }
 
-    @GetMapping(path = "/deletekig/{id}")
+    @GetMapping(path = "/delete_kid_by_age/{age}")
     public ResponseEntity<ResponseDTO>deleteKidbyage(byte age){
         listSEService.deleteKidbyage(age);
         return new ResponseEntity<>(new ResponseDTO(200,"niño eliminado",null),HttpStatus.OK);
     }
-    @GetMapping(path = "/delete_kid/{id}")
-    public ResponseEntity<ResponseDTO>deleteKid(@PathVariable String id) {
+    @GetMapping(path = "/delete_kid_by_id/{id}")
+    public ResponseEntity<ResponseDTO> deleteKid(@PathVariable String id) throws ListSEException {
         listSEService.deleteKid(id);
         return new ResponseEntity<>(new ResponseDTO(
                 200, "Niño eliminado", null), HttpStatus.OK);
@@ -99,7 +99,7 @@ public class ListSEController {
                 200,kidsByLocationDTOList,
                 null), HttpStatus.OK);
     }
-    @GetMapping(path = "/delete_kid_by_age/{age}")
+    @GetMapping(path = "/lose_positions/{age}")
     public ResponseEntity<ResponseDTO> losePositions(@PathVariable byte age) {
         listSEService.deleteKidbyage(age);
         return new ResponseEntity<>(new ResponseDTO(
@@ -112,17 +112,17 @@ public class ListSEController {
                 200, "los niños fueron ordenados" , null), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/kids_to_beginning")
+    @GetMapping(path = "/put_Kids_Beginning")
     public ResponseEntity<ResponseDTO> putKidsBeginning() throws ListSEException {
         listSEService.putKidsBeginning();
         return new ResponseEntity<>(new ResponseDTO(
                 200, "niños agregados al inicio y niñas agregadas al final", null), HttpStatus.OK);
     }
-    @PostMapping(path = "/earn_positions")
+    @PostMapping(path = "/win_positions")
     public ResponseEntity<ResponseDTO> WinPos(@RequestBody Map<String, Object> requestBody)throws ListSEException {
         String id = (String) requestBody.get("id");
-        Integer earn = (Integer) requestBody.get("earn");
-        listSEService.WinPos(id, earn);
+        Integer win = (Integer) requestBody.get("win");
+        listSEService.WinPos(id, win);
         return new ResponseEntity<>(new ResponseDTO(
                 200, "posiciones re ordenadas", null), HttpStatus.OK);
 }
@@ -156,7 +156,7 @@ public class ListSEController {
                 200,kidsByLocationDTOList,
                 null), HttpStatus.OK);
     }
-    @GetMapping(path = "/pets_by_locations/{age}")
+    @GetMapping(path = "/kids_by_locations/{age}")
     public ResponseEntity<ResponseDTO> getKidsByLocation(@PathVariable byte age){
         List<KidsByLocationDTO> kidsByLocationDTO = new ArrayList<>();
         for(Location loc: LocationService.getLocations()){
@@ -172,5 +172,25 @@ public class ListSEController {
         return new ResponseEntity<>(new ResponseDTO(
                 200,kidsByLocationDTO,
                 null), HttpStatus.OK);
+    }
+    @PostMapping(path ="/send_kidsend_char")
+    public ResponseEntity<ResponseDTO> sendKidsToEndByChar(@RequestBody Map<String, Object> requestData)throws ListSEException{
+        try {
+            String userString = (String) requestData.get("user");
+            char user = userString.toLowerCase().charAt(0);
+            listSEService.sendKidsToByChar(user);
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "ordenados", null), HttpStatus.OK);
+        }catch(ListSEException e){
+            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping(path = "/get_averageAge")
+    public ResponseEntity<ResponseDTO> get_average_age(){
+        try {
+            return new ResponseEntity<>(new ResponseDTO(200,"el promedio de los niños es:"+ listSEService.getAvereageAge(),null),HttpStatus.OK);
+        }catch (ListSEException e){
+            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 }

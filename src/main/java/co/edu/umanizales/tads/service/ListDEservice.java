@@ -38,7 +38,7 @@ public class ListDEservice {
     public int getCounPetLocCode(String code){return pets.getCounPetLocCode(code);}
     public int getCountPetByLocCodeMale(String code){return pets.getCountPetByLocCodeMale(code);}
     public int getCountPetByLocCodeFemale(String code){return pets.getCountPetByLocCodeFemale(code);}
-    public void deleteByAge(byte age)throws ListDeException{pets.deleteByAge(age);}
+    public void deletePetByage(byte age)throws ListDeException{pets.deleteByAge(age);}
     public void RemovePetInPosition(String Phone, int pos1) throws ListDeException, ListSEException {pets.RemovePetInPosition(Phone, pos1);}
     public void sendPetsToEndByChar(char user) {pets.sendPetsToEndByChar(user);}
     public ArrayList<Pet> showList() {return pets.showList();}
