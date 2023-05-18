@@ -16,20 +16,18 @@ public class Pet{
     @NotBlank
     @Size(max =30)
     private String name;
+    @NotBlank
+    @Size(max = 30)
+    private String breed;
     @Min(1)
     @Max(14)
     @NotNull
     private char gender;
-    @Size(min = 7, max =15 )
-    @NotBlank
-    private String phone;
     @NotBlank
     @Size(max = 15,min = 1,message = "digite maximo 15 caracteres  y minimo 1 caracter")
     @NotNull(message = "debe llenar este campo")
     private String identification;
-    @NotBlank
-    @Size(max = 30)
-    private String breed;
+
     @Valid
     @NotNull
     private Location location;

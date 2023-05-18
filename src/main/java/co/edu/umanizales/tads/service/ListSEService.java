@@ -20,6 +20,7 @@ public class ListSEService {
     public Node getKids() {return kids.getHead();}
 
     public void add(Kid kid)throws ListSEException{kids.add(kid);}
+
     public void deleteKid(String id){kids.deleteKid(id);}
     public void changeExtremes () {kids.changeExtremes();}
     public void losePosition (String id, int lose) throws ListSEException {kids.losePosition(id,lose);}

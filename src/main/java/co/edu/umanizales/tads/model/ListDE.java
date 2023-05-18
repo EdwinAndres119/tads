@@ -24,13 +24,13 @@ Lo que significa que cada nodo en la lista tiene referencias tanto al nodo anter
         if (this.head != null) {
             NodeDE temp = this.head;
             while (temp.getNext() != null) {
-                if(temp.getData().getPhone().equals(pet.getPhone())){
-                    throw new ListDeException("400","Ya existe una mascota con ese codigo");
+                if(temp.getData().getIdentification().equals(pet.getIdentification())){
+                    throw new ListDeException("400","Ya existe una mascota con este codigo");
                 }
                 temp = temp.getNext();
             }
-            if(temp.getData().getPhone().equals(pet.getPhone())){
-                throw new ListDeException("400","Ya existe una mascota con ese codigo");
+            if(temp.getData().getIdentification().equals(pet.getIdentification())){
+                throw new ListDeException("400","Ya existe una mascota con este codigo");
             }
             NodeDE newNode = new NodeDE(pet);
             temp.setNext(newNode);
@@ -104,11 +104,11 @@ Finalmente, después de eliminar el nodo, se disminuye el tamaño de la lista.
             throw new ListDeException("404", "no hay datos suficientes");
         }
     }
-    public void deletePet(String phone) throws ListDeException {
+    public void deletePet(String id) throws ListDeException {
         NodeDE empt = null;
         NodeDE temp = head;
 
-        while (temp != null && !temp.getData().getPhone().equals(phone)) {
+        while (temp != null && !temp.getData().getIdentification().equals(id)) {
             empt = temp;
             temp = temp.getNext();
         }
@@ -147,7 +147,7 @@ Finalmente, después de eliminar el nodo, se disminuye el tamaño de la lista.
 
      RemovePetInPosition
      */
-    public void RemovePetInPosition(String phone, int pos1) throws ListDeException {
+    public void RemovePetInPosition(String id, int pos1) throws ListDeException {
         if (pos1 < 0 || pos1 >= size){
 
         }
@@ -165,7 +165,6 @@ if (this.head !=null){
             temp = temp.getNext();
     }
         if (temp != null) {
-            //------------------eliminamos el elemento encontrado------------------------//
             if (temp.getNext() != null) {
                 temp.getPrevious().setNext(temp.getNext());
                 temp.getNext().setPrevious(temp.getPrevious());
@@ -195,54 +194,33 @@ es menor que cero o mayor o igual que el tamaño de la lista, la nueva mascota s
  para asegurar que la lista doblemente enlazada se mantenga y al final, se incrementa el tamaño de la lista.
  */
 
-/*
-    public void addPetInPos(Pet pet, int pos2) {
-        NodeDE temp = this.head;
-        NodeDE newNode = new NodeDE(pet);
-        if (this.head != null) {
-            if (verifyPhone(pet) == 0) {
-                if (pos2 > size) {
-                    addPet(pet);
-                } else if (pos2 < 0) {
-                    addPetToBeginning(pet);
-                } else {
-                    for (int i = 0; temp.getNext() != null && i < pos2; i++) {
-                        temp = temp.getNext();
-                    }
-                    temp.setNext(newNode);
-                }
-                size++;
-            } else {
-                throw new ListDeException("400","ya existe la mascota");
-            }
-        }
-     }
 
-*/
-public void addPetInPos(Pet pet, int pos2) {
-    NodeDE temp = head;
+public void addPetInPos(Pet pet, int pos2) throws ListDeException {
+    NodeDE temp = this.head;
     NodeDE newNode = new NodeDE(pet);
+    if (this.head != null) {
+        if (verifyID(pet) == 0) {
+            if (pos2 > size) {
+                addPet(pet);
+            } else if (pos2 < 0 || pos2 == 0) {
+                addPetToBeginning(pet);
+            } else {
+                for (int i = 0; i < pos2 - 1 && temp.getNext() != null; i++) {
+                    temp = temp.getNext();
+                }
 
-    if (pos2 < 0 || pos2 >= size)
-        addPet(pet);
-    if (pos2 == 0) {
-        addPetToBeginning(pet);
+                temp.getNext().setPrevious(newNode);
+                newNode.setNext(temp.getNext());
+                temp.setNext(newNode);
+                newNode.setPrevious(temp);
 
+            }
+        } else {
+            throw new ListDeException("400", "ya existe esta mascota");
+        }
     }
-    for (int i = 0; temp.getNext() != null && i < pos2 - 1; i++) {
-        temp = temp.getNext();
-    }
-    newNode.setNext(temp.getNext());
-    temp.setNext(newNode);
-
-    if (newNode.getNext() !=null){
-        newNode.getNext().setPrevious(newNode);
-    }
-    newNode.setPrevious(temp);
-    size++;
 
 }
-
 
     public int getCounPetLocCode(String code){
         int count =0;
@@ -319,39 +297,46 @@ public void addPetInPos(Pet pet, int pos2) {
             this.head = listDE1.getHead();
         }
     }
-    public void losePositions(String phone, int lose) {
-        NodeDE temp = head;
+    public void losePositions(String id, int lose)  {
+        NodeDE temp = this.head;
         int sum = 0;
         ListDE listDE1 = new ListDE();
-        boolean found = false;
-        boolean added = false;
-        while (temp != null) {
-            if (temp.getData().getPhone().equals(phone)) {
-                if (added) {
-
+        if (head != null) {
+            while (temp != null) {
+                if (!temp.getData().getIdentification().equals(id)) {
                     listDE1.addPet(temp.getData());
+                    temp = temp.getNext();
                 } else {
-
-                    listDE1.addPet(temp.getData());
-                    added = true;
+                    temp = temp.getNext();
                 }
-                found = true;
-            } else {
-                listDE1.addPet(temp.getData());
             }
-            temp = temp.getNext();
-        }
-        if (!found) {
-            throw new ListDeException("400","El id buscado no se encuentra en la lista");
-        }
-        sum = lose + getPosById(phone);
-        if (sum>size){
-            addPet(getPetByPhone(phone));
         } else {
-            if (!listDE1.getPetByPos(sum).getPhone().equals(phone)) {
-                listDE1.addPetInPos(getPetByPhone(phone), sum);
+            throw new ListDeException("404", "no hay datos en la lista");
+        }
+        sum = getPosById(id)+lose;
+        listDE1.addInPosValidations(getPetByid(id), sum);
+        this.head = listDE1.getHead();
+    }
+    public void addInPosValidations(Pet pet, int pos2) throws ListDeException {
+        NodeDE temp = head;
+        NodeDE newNode = new NodeDE(pet);
+        int listLength = getLength();
+        if (pos2 < 0 || pos2 >= listLength)
+            addPet(pet);
+        if (pos2 == 0) {
+            newNode.setNext(head);
+            this.head.setPrevious(newNode);
+            head = newNode;
+
+
+        } else {
+            for (int i = 0; temp.getNext() != null && i < pos2 - 1; i++) {
+                temp = temp.getNext();
             }
-            this.head = listDE1.getHead();
+            newNode.setNext(temp.getNext());
+            newNode.setPrevious(temp);
+            temp.setNext(newNode);
+            temp.getNext().setPrevious(newNode);
         }
     }
 
@@ -359,7 +344,7 @@ public void addPetInPos(Pet pet, int pos2) {
         NodeDE temp = this.head;
         int acum = 0;
         if (head != null) {
-            while (temp != null && !temp.getData().getPhone().equals(id)) {
+            while (temp != null && !temp.getData().getIdentification().equals(id)) {
                 acum = acum + 1;
                 temp = temp.getNext();
 
@@ -367,32 +352,30 @@ public void addPetInPos(Pet pet, int pos2) {
         }
         return acum;
     }
-    public Pet getPetByPos(int pos) {
-        if (pos < 0 || pos >= size) {
-            return null;
-        } else {
-            NodeDE temp = head;
-            for (int i = 0; i < pos; i++) {
-                temp = temp.getNext();
-            }
-            return temp.getData();
+    public int getLength() {
+        int total = 0;
+        NodeDE temp = head;
+        while (temp != null) {
+            total++;
+            temp = temp.getNext();
         }
+        return total;
     }
-    public Pet getPetByPhone(String phone) {
-        NodeDE temp = this.head;
+
+    public Pet getPetByid(String identification) {
+        NodeDE temp = head;
         if (head != null) {
-            while (temp!=null){
+            while (temp != null) {
                 temp = temp.getPrevious();
             }
-            while (temp != null && !temp.getData().getPhone().equals(phone)) {
-             temp = temp.getNext();
-
+            while (temp != null && !temp.getData().getIdentification().equals(identification)) {
+                temp.getNext();
             }
-
         }
-      Pet pet = new Pet(temp.getData().getAge(), temp.getData().getName(),
-              temp.getData().getGender(), temp.getData().getPhone(),
-              temp.getData().getBreed(),temp.getData().getIdentification(),temp.getData().getLocation());
+
+        Pet pet = new Pet(temp.getData().getAge(),
+                temp.getData().getName(), temp.getData().getIdentification(), temp.getData().getGender(), temp.getData().getBreed(),
+                temp.getData().getLocation());
         return pet;
     }
 
@@ -401,20 +384,21 @@ public void addPetInPos(Pet pet, int pos2) {
     public void changeExtremes() {
         NodeDE temp = this.head;
         if (this.head != null) {
-            while (temp!=null){
+            while (temp != null) {
                 temp = temp.getPrevious();
-            }Pet copy = temp.getData();
+            }
+            Pet copy = temp.getData();
             if (this.head.getNext() != null && this.head.getPrevious() != null) {
                 while (temp.getNext() != null) {
                     temp = temp.getNext();
-                }//temp is in the last data
-                //creation of a copy
-                this.head.setData(temp.getData());//to use the data of the temp that is in the last data
-                temp.setData(copy);//the head data into the last
+                }
+                this.head.setData(temp.getData());
+                temp.setData(copy);
             }
-        }else{
-            throw new ListDeException("400","No hay suficientes datos en la lista");
+        } else {
+            throw new ListDeException("400", "No hay suficientes datos en la lista");
         }
+
     }
     public void invert() {
         NodeDE temp = this.head;
@@ -463,7 +447,7 @@ public void addPetInPos(Pet pet, int pos2) {
                 temp = temp.getNext();
             }
             if (!found){
-                throw new ListDeException("404","No hay mascotas con la edad indicada");
+                throw new ListDeException("404","No hay mascotas con esta edad");
             }
             this.head = listDE1.getHead();
         }else{
@@ -489,13 +473,13 @@ public void addPetInPos(Pet pet, int pos2) {
 
 
 
-    public void winPos(String phone, int earn) throws ListDeException{
+    public void winPos(String id, int earn) throws ListDeException{
         NodeDE temp = head;
         int sum = 0;
         ListDE listDE1 = new ListDE();
         if (head != null) {
             while (temp != null) {
-                if (!temp.getData().getPhone().equals(phone)) {
+                if (!temp.getData().getIdentification().equals(id)) {
                     listDE1.addPet(temp.getData());
                     temp = temp.getNext();
                 } else {
@@ -505,8 +489,8 @@ public void addPetInPos(Pet pet, int pos2) {
         }else{
             throw new ListDeException("400","No hay datos en la lista");
         }
-        sum = getPosById(phone) - earn;
-        listDE1.addPetInPos(getPetByPhone(phone), sum);
+        sum = getPosById(id) - earn;
+        listDE1.addPetInPos(getPetByid(id), sum);
         this.head = listDE1.getHead();
     }
 
@@ -559,18 +543,17 @@ public void addPetInPos(Pet pet, int pos2) {
         return sb.toString();
 
     }
-    public int verifyPhone(PetDTO petDTO) {
+    public int verifyID(Pet pet) {
         NodeDE temp = this.head;
         boolean found = false;
         while (temp != null) {
-            if (temp.getData().getPhone().equals(petDTO.getPhone())) {
+            if (temp.getData().getIdentification().equals(pet.getIdentification())) {
                 found = true;
                 break;
             }
             temp = temp.getNext();
         }
         return found ? 1 : 0;
-
     }
 
     public void sendPetsToEndByChar(char user) throws ListDeException{

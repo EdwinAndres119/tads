@@ -1,6 +1,5 @@
 package co.edu.umanizales.tads.service;
 
-import co.edu.umanizales.tads.controller.dto.PetDTO;
 import co.edu.umanizales.tads.exception.ListDeException;
 import co.edu.umanizales.tads.exception.ListSEException;
 import co.edu.umanizales.tads.model.ListDE;
@@ -34,7 +33,6 @@ public class ListDEservice {
     public double getHalfAgeDog(){return pets.getHalfAgeDog();}
     public void WinPos(String phone, int earn){pets.winPos(phone,earn);}
     public String ReportByage(){return pets.ReportByage();}
-    public int verifyPhone(PetDTO petDTO){return pets.verifyPhone(petDTO);}
     public int getCounPetLocCode(String code){return pets.getCounPetLocCode(code);}
     public int getCountPetByLocCodeMale(String code){return pets.getCountPetByLocCodeMale(code);}
     public int getCountPetByLocCodeFemale(String code){return pets.getCountPetByLocCodeFemale(code);}

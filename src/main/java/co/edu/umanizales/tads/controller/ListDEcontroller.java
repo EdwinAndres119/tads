@@ -48,20 +48,19 @@ public class ListDEcontroller {
         }
     }
 
-    @GetMapping(path = "/change_extremes_DE")
+    @GetMapping(path = "/change_extremes")
     public ResponseEntity<ResponseDTO> changeExtremes() throws ListDeException{
         try {
             lisDEService.changeExtremes();
             return new ResponseEntity<>(new ResponseDTO(
-                    200, "SE han intercambiado los extremos",
-                    null), HttpStatus.OK);
-        }catch (ListDeException e){
-            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+                    200, "se han intercambiado los extremos", null), HttpStatus.OK);
+        } catch (ListDeException e) {
+            throw new RequestException(e.getCode(), e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDTO> addPet(@Valid @RequestBody PetDTO petDTO ) throws ListDeException {
+    public ResponseEntity<ResponseDTO> addPet(@Valid @RequestBody PetDTO petDTO) throws ListDeException {
         try {
             Location location = LocationService.getLocationByCode(petDTO.getCodeLocation());
             if (location == null) {
@@ -69,15 +68,16 @@ public class ListDEcontroller {
                         404, "La ubicación no existe",
                         null), HttpStatus.BAD_REQUEST);
             }
-            ListDEservice.addPet(
-                    new Pet(petDTO.getAge(),petDTO.getName(),petDTO.getGender(),
-                        petDTO.getPhone(),petDTO.getBreed(),location));
+            lisDEService.addPet(
+                    new Pet(petDTO.getAge(),
+                            petDTO.getName(), petDTO.getBreed(),
+                            petDTO.getGender(), petDTO.getIdentification(), location));
             return new ResponseEntity<>(new ResponseDTO(
                     200, "Se ha adicionado el petacón",
                     null), HttpStatus.OK);
 
-        }catch (ListDeException e){
-            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        } catch (ListDeException e) {
+            throw new RequestException(e.getCode(), e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -151,35 +151,16 @@ public class ListDEcontroller {
             if (location == null)
                 return new ResponseEntity<>(new ResponseDTO(404, "la ubicacion requerida no existe",null),HttpStatus.OK);
 
-        lisDEService.addPetToBeginning(new Pet(petDTO.getAge(),petDTO.getName(),petDTO.getGender(),petDTO.getPhone(),petDTO.getBreed(),location) );
+        lisDEService.addPetToBeginning( new Pet(petDTO.getAge(),
+                petDTO.getName(), petDTO.getBreed(),
+                petDTO.getGender(), petDTO.getIdentification(), location));;
         return new ResponseEntity<>(new ResponseDTO(200, "se adiciono el perro",null),HttpStatus.OK);
         }catch (ListDeException e){
             throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PostMapping(path = "/add_pet_in_pos_DE/{pos}")
-    public ResponseEntity<ResponseDTO> addPetInPos(@Valid @RequestBody PetDTO petDTO,@Min (0)@PathVariable int pos) {
-        if (lisDEService.verifyPhone(petDTO) == 0) {
-            Location location = LocationService.getLocationByCode(petDTO.getCodeLocation());
-            if (location == null) {
-                return new ResponseEntity<>(new ResponseDTO(
-                        404, "La ubicación no existe",
-                        null), HttpStatus.BAD_REQUEST);
-            }
-            lisDEService.addPetInPos(
-                    new Pet(petDTO.getAge(),petDTO.getName(),petDTO.getGender(),
-                            petDTO.getPhone(),petDTO.getBreed(),location),pos);
-            return new ResponseEntity<>(new ResponseDTO(
-                    200, "Se ha adicionado el petacón",
-                    null), HttpStatus.OK);
-        } else {
-            List<ErrorDTO> errorDTOS = new ArrayList<>();
-            ErrorDTO errorDTO = new ErrorDTO(400, "digite una mascota con un id distinto");
-            errorDTOS.add(errorDTO);
-            return new ResponseEntity<>(new ResponseDTO(400, "Ya existe una mascota con ese id", errorDTOS), HttpStatus.BAD_REQUEST);
-        }
-    }
+
 
     @GetMapping(path = "/get_average_age_DE")
     public ResponseEntity<ResponseDTO> getHalfAgeDog() throws ListDeException {
