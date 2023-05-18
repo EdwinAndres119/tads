@@ -3,6 +3,7 @@ package co.edu.umanizales.tads.controller;
 import co.edu.umanizales.tads.controller.dto.KidDTO;
 import co.edu.umanizales.tads.controller.dto.KidsByLocationDTO;
 import co.edu.umanizales.tads.controller.dto.ResponseDTO;
+import co.edu.umanizales.tads.exception.ListDeException;
 import co.edu.umanizales.tads.exception.ListSEException;
 import co.edu.umanizales.tads.exception.RequestException;
 import co.edu.umanizales.tads.model.Kid;
@@ -34,20 +35,28 @@ public class ListSEController {
         return new ResponseEntity<>(new ResponseDTO(200, listSEService.getKids(),null),HttpStatus.OK);
     }
     @GetMapping("/invert")
-    public ResponseEntity<ResponseDTO> invert(){
-        listSEService.invert();
-        return new ResponseEntity<>(new ResponseDTO(
-                200,"SE ha invertido la lista",
-                null), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> invert() throws ListDeException {
+        try {
+            listSEService.invert();
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "SE ha invertido la lista",
+                    null), HttpStatus.OK);
+        }catch (ListDeException e){
+            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
 
     }
 
     @GetMapping(path = "/change_extremes")
-    public ResponseEntity<ResponseDTO> changeExtremes() {
-        listSEService.changeExtremes();
-        return new ResponseEntity<>(new ResponseDTO(
-                200,"SE han intercambiado los extremos",
-                null), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> changeExtremes() throws ListDeException{
+        try {
+            listSEService.changeExtremes();
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "SE han intercambiado los extremos",
+                    null), HttpStatus.OK);
+        }catch (ListDeException e){
+            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping
@@ -77,10 +86,11 @@ public class ListSEController {
         return new ResponseEntity<>(new ResponseDTO(200,"niño eliminado",null),HttpStatus.OK);
     }
     @GetMapping(path = "/delete_kid_by_id/{id}")
-    public ResponseEntity<ResponseDTO> deleteKid(@PathVariable String id) throws ListSEException {
-        listSEService.deleteKid(id);
-        return new ResponseEntity<>(new ResponseDTO(
-                200, "Niño eliminado", null), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> deleteKid(@PathVariable String id) {
+            listSEService.deleteKid(id);
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "Niño eliminado", null), HttpStatus.OK);
+
     }
     @GetMapping(path = "/kidsbyCity/{age}")
     public ResponseEntity<ResponseDTO> getKidsByCity(@PathVariable byte age){
@@ -99,12 +109,6 @@ public class ListSEController {
                 200,kidsByLocationDTOList,
                 null), HttpStatus.OK);
     }
-    @GetMapping(path = "/lose_positions/{age}")
-    public ResponseEntity<ResponseDTO> losePositions(@PathVariable byte age) {
-        listSEService.deleteKidbyage(age);
-        return new ResponseEntity<>(new ResponseDTO(
-                200, "Niños con esa edad eliminados", null), HttpStatus.OK);
-    }
     @GetMapping(path = "/orderByGender")
     public ResponseEntity<ResponseDTO> orderByGender() throws ListSEException {
         listSEService.orderByGender();
@@ -120,11 +124,17 @@ public class ListSEController {
     }
     @PostMapping(path = "/win_positions")
     public ResponseEntity<ResponseDTO> WinPos(@RequestBody Map<String, Object> requestBody)throws ListSEException {
-        String id = (String) requestBody.get("id");
-        Integer win = (Integer) requestBody.get("win");
-        listSEService.WinPos(id, win);
-        return new ResponseEntity<>(new ResponseDTO(
-                200, "posiciones re ordenadas", null), HttpStatus.OK);
+        try {
+
+
+            String id = (String) requestBody.get("id");
+            Integer win = (Integer) requestBody.get("win");
+            listSEService.WinPos(id, win);
+            return new ResponseEntity<>(new ResponseDTO(
+                    200, "posiciones re ordenadas", null), HttpStatus.OK);
+        }catch (ListSEException e){
+            throw new ListSEException(e.getCode(),e.getMessage());
+        }
 }
     @GetMapping(path = "/generate_report_by_age")
     public ResponseEntity<ResponseDTO>  ReportByage(){

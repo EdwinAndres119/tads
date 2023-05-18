@@ -20,9 +20,13 @@ public class Pet{
     @Max(14)
     @NotNull
     private char gender;
-    @Size(min = 6, max =15 )
+    @Size(min = 7, max =15 )
     @NotBlank
-    private String ownernumb;
+    private String phone;
+    @NotBlank
+    @Size(max = 15,min = 1,message = "digite maximo 15 caracteres  y minimo 1 caracter")
+    @NotNull(message = "debe llenar este campo")
+    private String identification;
     @NotBlank
     @Size(max = 30)
     private String breed;

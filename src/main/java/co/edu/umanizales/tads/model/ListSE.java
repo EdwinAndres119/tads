@@ -309,7 +309,6 @@ public class ListSE {
     }
     public void WinPos(String id , int win) throws ListSEException {
         Node temp = head;
-        win = 0;
         int sum = 0;
         ListSE listSE1 = new ListSE();
         if(head != null){
@@ -322,7 +321,7 @@ public class ListSE {
                 }
             }
         }
-        sum = getPosByid(id)- win;
+        sum = getPosByid(id)-win;
         listSE1.addInPositionVali(getKidById(id),sum);
         this.head = listSE1.getHead();
     }

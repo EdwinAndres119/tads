@@ -24,12 +24,12 @@ Lo que significa que cada nodo en la lista tiene referencias tanto al nodo anter
         if (this.head != null) {
             NodeDE temp = this.head;
             while (temp.getNext() != null) {
-                if(temp.getData().getOwnernumb().equals(pet.getOwnernumb())){
+                if(temp.getData().getPhone().equals(pet.getPhone())){
                     throw new ListDeException("400","Ya existe una mascota con ese codigo");
                 }
-                temp.getNext();
+                temp = temp.getNext();
             }
-            if(temp.getData().getOwnernumb().equals(pet.getOwnernumb())){
+            if(temp.getData().getPhone().equals(pet.getPhone())){
                 throw new ListDeException("400","Ya existe una mascota con ese codigo");
             }
             NodeDE newNode = new NodeDE(pet);
@@ -44,9 +44,21 @@ Lo que significa que cada nodo en la lista tiene referencias tanto al nodo anter
     public void addPetToBeginning(Pet pet) {
         NodeDE newNode = new NodeDE(pet);
         if (this.head != null) {
+            NodeDE temp = this.head;
+            while (temp.getNext() != null) {
+                if (temp.getData().getIdentification().equals(pet.getIdentification())) {
+                    throw new ListDeException("400", "Ya existe una mascota con ese codigo");
+                }
+                temp = temp.getNext();
+            }
+            if (temp.getData().getIdentification().equals(pet.getIdentification())) {
+                throw new ListDeException("400", "Ya existe una mascota con ese codigo");
+            }
             this.head.setPrevious(newNode);
+            newNode.setNext(this.head);
         }
         this.head = newNode;
+
         size++;
     }
     /*
@@ -96,7 +108,7 @@ Finalmente, después de eliminar el nodo, se disminuye el tamaño de la lista.
         NodeDE empt = null;
         NodeDE temp = head;
 
-        while (temp != null && !temp.getData().getOwnernumb().equals(phone)) {
+        while (temp != null && !temp.getData().getPhone().equals(phone)) {
             empt = temp;
             temp = temp.getNext();
         }
@@ -183,30 +195,54 @@ es menor que cero o mayor o igual que el tamaño de la lista, la nueva mascota s
  para asegurar que la lista doblemente enlazada se mantenga y al final, se incrementa el tamaño de la lista.
  */
 
-
+/*
     public void addPetInPos(Pet pet, int pos2) {
-        NodeDE temp = head;
+        NodeDE temp = this.head;
         NodeDE newNode = new NodeDE(pet);
-
-        if (pos2 < 0 || pos2 >= size)
-            addPet(pet);
-        if (pos2 == 0) {
-            addPetToBeginning(pet);
-
+        if (this.head != null) {
+            if (verifyPhone(pet) == 0) {
+                if (pos2 > size) {
+                    addPet(pet);
+                } else if (pos2 < 0) {
+                    addPetToBeginning(pet);
+                } else {
+                    for (int i = 0; temp.getNext() != null && i < pos2; i++) {
+                        temp = temp.getNext();
+                    }
+                    temp.setNext(newNode);
+                }
+                size++;
+            } else {
+                throw new ListDeException("400","ya existe la mascota");
+            }
         }
-        for (int i = 0; temp.getNext() != null && i < pos2 - 1; i++) {
-            temp = temp.getNext();
-        }
-        newNode.setNext(temp.getNext());
-        temp.setNext(newNode);
+     }
 
-        if (newNode.getNext() !=null){
-            newNode.getNext().setPrevious(newNode);
-        }
-        newNode.setPrevious(temp);
-        size++;
+*/
+public void addPetInPos(Pet pet, int pos2) {
+    NodeDE temp = head;
+    NodeDE newNode = new NodeDE(pet);
+
+    if (pos2 < 0 || pos2 >= size)
+        addPet(pet);
+    if (pos2 == 0) {
+        addPetToBeginning(pet);
 
     }
+    for (int i = 0; temp.getNext() != null && i < pos2 - 1; i++) {
+        temp = temp.getNext();
+    }
+    newNode.setNext(temp.getNext());
+    temp.setNext(newNode);
+
+    if (newNode.getNext() !=null){
+        newNode.getNext().setPrevious(newNode);
+    }
+    newNode.setPrevious(temp);
+    size++;
+
+}
+
 
     public int getCounPetLocCode(String code){
         int count =0;
@@ -255,12 +291,12 @@ es menor que cero o mayor o igual que el tamaño de la lista, la nueva mascota s
         return female;
     }
 
-    public void orderByGender()  {
+    public void orderByGender() throws ListDeException {
         ListDE listDE1 = new ListDE();
         int sum = 0;
-        NodeDE temp = head;
+        NodeDE temp = this.head;
         if (head == null) {
-            throw new ListDeException("400","No hay mascotas en la lista");
+            throw new ListDeException("404", "no hay datos en la lista");
         } else {
             while (temp != null) {
                 if (temp.getData().getGender() == 'F') {
@@ -269,17 +305,16 @@ es menor que cero o mayor o igual que el tamaño de la lista, la nueva mascota s
                 }
                 temp = temp.getNext();
             }
+            temp = head;
+            while (temp != null) {
+                if (temp.getData().getGender() == 'M') {
+                    listDE1.addPetInPos(temp.getData(), sum);
+                    temp = temp.getNext();
+                    sum = sum + 2;
+                } else {
+                    temp = temp.getNext();
 
-        }
-        temp = head;
-        sum = listDE1.getSize();
-        while (temp != null) {
-            if (temp.getData().getGender() == 'M') {
-                listDE1.addPetInPos(temp.getData(), sum);
-                temp = temp.getNext();
-                sum = sum + 2;
-            } else {
-                temp = temp.getNext();
+                }
             }
             this.head = listDE1.getHead();
         }
@@ -291,7 +326,7 @@ es menor que cero o mayor o igual que el tamaño de la lista, la nueva mascota s
         boolean found = false;
         boolean added = false;
         while (temp != null) {
-            if (temp.getData().getOwnernumb().equals(phone)) {
+            if (temp.getData().getPhone().equals(phone)) {
                 if (added) {
 
                     listDE1.addPet(temp.getData());
@@ -313,7 +348,7 @@ es menor que cero o mayor o igual que el tamaño de la lista, la nueva mascota s
         if (sum>size){
             addPet(getPetByPhone(phone));
         } else {
-            if (!listDE1.getPetByPos(sum).getOwnernumb().equals(phone)) {
+            if (!listDE1.getPetByPos(sum).getPhone().equals(phone)) {
                 listDE1.addPetInPos(getPetByPhone(phone), sum);
             }
             this.head = listDE1.getHead();
@@ -324,7 +359,7 @@ es menor que cero o mayor o igual que el tamaño de la lista, la nueva mascota s
         NodeDE temp = this.head;
         int acum = 0;
         if (head != null) {
-            while (temp != null && !temp.getData().getOwnernumb().equals(id)) {
+            while (temp != null && !temp.getData().getPhone().equals(id)) {
                 acum = acum + 1;
                 temp = temp.getNext();
 
@@ -343,21 +378,21 @@ es menor que cero o mayor o igual que el tamaño de la lista, la nueva mascota s
             return temp.getData();
         }
     }
-    public Pet getPetByPhone(String id) {
+    public Pet getPetByPhone(String phone) {
         NodeDE temp = this.head;
         if (head != null) {
             while (temp!=null){
                 temp = temp.getPrevious();
             }
-            while (temp != null && !temp.getData().getOwnernumb().equals(id)) {
+            while (temp != null && !temp.getData().getPhone().equals(phone)) {
              temp = temp.getNext();
 
             }
 
         }
       Pet pet = new Pet(temp.getData().getAge(), temp.getData().getName(),
-              temp.getData().getGender(), temp.getData().getOwnernumb(),
-              temp.getData().getBreed(), temp.getData().getLocation());
+              temp.getData().getGender(), temp.getData().getPhone(),
+              temp.getData().getBreed(),temp.getData().getIdentification(),temp.getData().getLocation());
         return pet;
     }
 
@@ -460,7 +495,7 @@ es menor que cero o mayor o igual que el tamaño de la lista, la nueva mascota s
         ListDE listDE1 = new ListDE();
         if (head != null) {
             while (temp != null) {
-                if (!temp.getData().getOwnernumb().equals(phone)) {
+                if (!temp.getData().getPhone().equals(phone)) {
                     listDE1.addPet(temp.getData());
                     temp = temp.getNext();
                 } else {
@@ -528,7 +563,7 @@ es menor que cero o mayor o igual que el tamaño de la lista, la nueva mascota s
         NodeDE temp = this.head;
         boolean found = false;
         while (temp != null) {
-            if (temp.getData().getOwnernumb().equals(petDTO.getOwnernumb())) {
+            if (temp.getData().getPhone().equals(petDTO.getPhone())) {
                 found = true;
                 break;
             }
