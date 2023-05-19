@@ -25,13 +25,13 @@ public class ListDEservice {
     public void deletePet(String id)throws ListDeException{pets.deletePet(id);}
     public void addPetInPos(Pet pet, int pos){pets.addPetInPos(pet, pos);}
     public void orderByGender(){pets.orderByGender();}
-    public void losePositions(String phone,int lose){pets.losePositions(phone,lose);}
+    public void losePositions(String id,int lose){pets.losePositions(id,lose);}
     public void changeExtremes(){pets.changeExtremes();}
     public void invertList(){pets.invert();}
     public void putPetsMaleToBeginning(){pets.putPetBeginning();}
 
     public double getHalfAgeDog(){return pets.getHalfAgeDog();}
-    public void WinPos(String phone, int earn){pets.winPos(phone,earn);}
+    public void earnPositions(String id, int earn){pets.earnPositions(id,earn);}
     public String ReportByage(){return pets.ReportByage();}
     public int getCounPetLocCode(String code){return pets.getCounPetLocCode(code);}
     public int getCountPetByLocCodeMale(String code){return pets.getCountPetByLocCodeMale(code);}

@@ -36,12 +36,13 @@ Lo que significa que cada nodo en la lista tiene referencias tanto al nodo anter
             temp.setNext(newNode);
             temp.setPrevious(temp);
         } else {
-            this.head = new NodeDE(pet);
+            NodeDE newNode=new NodeDE(pet);
+            setHead(newNode);
         }
         size++;
     }
 
-    public void addPetToBeginning(Pet pet) {
+    public void addPetToBeginning(Pet pet) throws ListDeException{
         NodeDE newNode = new NodeDE(pet);
         if (this.head != null) {
             NodeDE temp = this.head;
@@ -61,6 +62,7 @@ Lo que significa que cada nodo en la lista tiene referencias tanto al nodo anter
 
         size++;
     }
+
     /*
  deletePet que busca y elimina una mascota de una lista doblemente enlazada de mascotas.La búsqueda se debe hacer en
  base al número de teléfono del propietario de la mascota. Si se encuentra una mascota
@@ -297,7 +299,7 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
             this.head = listDE1.getHead();
         }
     }
-    public void losePositions(String id, int lose)  {
+    public void losePositions(String id, int lose) throws ListDeException {
         NodeDE temp = this.head;
         int sum = 0;
         ListDE listDE1 = new ListDE();
@@ -310,41 +312,17 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
                     temp = temp.getNext();
                 }
             }
-        } else {
-            throw new ListDeException("404", "no hay datos en la lista");
         }
         sum = getPosById(id)+lose;
         listDE1.addInPosValidations(getPetByid(id), sum);
         this.head = listDE1.getHead();
     }
-    public void addInPosValidations(Pet pet, int pos2) throws ListDeException {
-        NodeDE temp = head;
-        NodeDE newNode = new NodeDE(pet);
-        int listLength = getLength();
-        if (pos2 < 0 || pos2 >= listLength)
-            addPet(pet);
-        if (pos2 == 0) {
-            newNode.setNext(head);
-            this.head.setPrevious(newNode);
-            head = newNode;
-
-
-        } else {
-            for (int i = 0; temp.getNext() != null && i < pos2 - 1; i++) {
-                temp = temp.getNext();
-            }
-            newNode.setNext(temp.getNext());
-            newNode.setPrevious(temp);
-            temp.setNext(newNode);
-            temp.getNext().setPrevious(newNode);
-        }
-    }
 
     public int getPosById(String id) {
         NodeDE temp = this.head;
-        int acum = 0;
+        int acum = 1;
         if (head != null) {
-            while (temp != null && !temp.getData().getIdentification().equals(id)) {
+            while (temp != null && temp.getData().getIdentification().equals(id)) {
                 acum = acum + 1;
                 temp = temp.getNext();
 
@@ -352,54 +330,38 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
         }
         return acum;
     }
-    public int getLength() {
-        int total = 0;
-        NodeDE temp = head;
-        while (temp != null) {
-            total++;
-            temp = temp.getNext();
-        }
-        return total;
-    }
 
-    public Pet getPetByid(String identification) {
+    public Pet getPetByid(String identification) throws ListDeException{
         NodeDE temp = head;
         if (head != null) {
             while (temp != null) {
-                temp = temp.getPrevious();
-            }
-            while (temp != null && !temp.getData().getIdentification().equals(identification)) {
-                temp.getNext();
-            }
-        }
-
-        Pet pet = new Pet(temp.getData().getAge(),
-                temp.getData().getName(), temp.getData().getIdentification(), temp.getData().getGender(), temp.getData().getBreed(),
-                temp.getData().getLocation());
-        return pet;
-    }
-
-
-
-    public void changeExtremes() {
-        NodeDE temp = this.head;
-        if (this.head != null) {
-            while (temp != null) {
-                temp = temp.getPrevious();
-            }
-            Pet copy = temp.getData();
-            if (this.head.getNext() != null && this.head.getPrevious() != null) {
-                while (temp.getNext() != null) {
-                    temp = temp.getNext();
+                if (temp.getData().getIdentification().equals(identification)) {
+                    return temp.getData() ;
                 }
-                this.head.setData(temp.getData());
-                temp.setData(copy);
+                temp = temp.getNext();
             }
-        } else {
-            throw new ListDeException("400", "No hay suficientes datos en la lista");
         }
+        return null;
 
     }
+
+
+
+
+
+
+    public void changeExtremes() throws ListDeException {
+        if(head!=null && head.getNext()!=null) {
+            NodeDE temp=head;
+            while(temp.getNext()!=null) {
+                temp=temp.getNext();
+            }
+            Pet copy=this.getHead().getData();
+            head.setData(temp.getData());
+            temp.setData(copy);
+        }
+    }
+
     public void invert() {
         NodeDE temp = this.head;
         ListDE listDE2 = new ListDE();
@@ -471,10 +433,8 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
         }
     }
 
-
-
-    public void winPos(String id, int earn) throws ListDeException{
-        NodeDE temp = head;
+    public void earnPositions(String id, int win)  {
+        NodeDE temp = this.head;
         int sum = 0;
         ListDE listDE1 = new ListDE();
         if (head != null) {
@@ -486,11 +446,13 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
                     temp = temp.getNext();
                 }
             }
-        }else{
-            throw new ListDeException("400","No hay datos en la lista");
+        }if (win!=1){
+            sum = win-getPosById(id) ;
+            listDE1.addInPosValidations(getPetByid(id), sum);
+
+        }else {
+            listDE1.addPetToBeginning(getPetByid(id));
         }
-        sum = getPosById(id) - earn;
-        listDE1.addPetInPos(getPetByid(id), sum);
         this.head = listDE1.getHead();
     }
 
@@ -556,7 +518,7 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
         return found ? 1 : 0;
     }
 
-    public void sendPetsToEndByChar(char user) throws ListDeException{
+    public void sendPetsToEndByChar(char user) throws ListDeException {
         ListDE listDE1 = new ListDE();
         NodeDE temp = this.head;
         if (this.head != null) {
@@ -568,11 +530,12 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
                 }
                 temp = temp.getNext();
             }
-        }else{
-            throw new ListDeException("400","no hay datos en la lista");
+        } else {
+            throw new ListDeException("400", "no hay datos en la lista");
         }
         this.head = listDE1.getHead();
     }
+
     public ArrayList<Pet> showList() {
         ArrayList<Pet> pets = new ArrayList<>();
         if (this.head != null) {
@@ -585,5 +548,36 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
         }
         return pets;
 
+    }
+    public void addInPosValidations(Pet pet, int pos2) throws ListDeException {
+        NodeDE temp = head;
+        NodeDE newNode = new NodeDE(pet);
+        int listLength = getLength();
+        if (pos2 < 0 || pos2 >= listLength)
+            addPet(pet);
+        if (pos2 == 0) {
+            newNode.setNext(head);
+            this.head.setPrevious(newNode);
+            head = newNode;
+
+
+        } else {
+            for (int i = 0; temp.getNext() != null && i < pos2 - 1; i++) {
+                temp = temp.getNext();
+            }
+            newNode.setNext(temp.getNext());
+            newNode.setPrevious(temp);
+            temp.setNext(newNode);
+            temp.getNext().setPrevious(newNode);
+        }
+    }
+    public int getLength() {
+        int total = 0;
+        NodeDE temp = head;
+        while (temp != null) {
+            total++;
+            temp = temp.getNext();
+        }
+        return total;
     }
 }
