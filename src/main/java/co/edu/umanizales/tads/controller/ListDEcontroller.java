@@ -68,7 +68,7 @@ public class ListDEcontroller {
             lisDEService.addPet(
                     new Pet(petDTO.getAge(),
                             petDTO.getName(), petDTO.getBreed(),
-                            petDTO.getGender(), petDTO.getIdentification(), location));
+                            petDTO.getGender(), petDTO.getIdentification(), location, petDTO.isShower()));
             return new ResponseEntity<>(new ResponseDTO(
                     200, "Se ha adicionado el petacón",
                     null), HttpStatus.OK);
@@ -148,7 +148,7 @@ public class ListDEcontroller {
             lisDEService.addPetToBeginning(
                     new Pet(petDTO.getAge(),
                             petDTO.getName(), petDTO.getBreed(),
-                            petDTO.getGender(), petDTO.getIdentification(), location));
+                            petDTO.getGender(), petDTO.getIdentification(), location, petDTO.isShower()));
             return new ResponseEntity<>(new ResponseDTO(
                     200, "Se ha adicionado el petacón",
                     null), HttpStatus.OK);

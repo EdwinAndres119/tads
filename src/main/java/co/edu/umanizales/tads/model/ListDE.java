@@ -41,6 +41,21 @@ Lo que significa que cada nodo en la lista tiene referencias tanto al nodo anter
         }
         size++;
     }
+    /*
+    metodo para add pets to beginning
+ creo primero que todo un nuevo nodo con la mascota que recibo para agregar
+ verifico si mi lista no esta vacia
+ si no esto es porque ya hay datos en mi lista
+ creo un temp o ayudante y este inicia en cabeza
+ con un bucle puedo recorrer toda la lista y verificando si el codigo de
+ la mascota que se quiere agregar no coincide con algun codigo que ya esta en la
+ lista si este codigo de la mascota ya esta debo mostrar una exepcion que me
+ diga que ya existe una mascota con este codigo
+ ya despuesd e avitar cualquier exepcion
+ debemos poner el nuevo nodo que se quiere poner en cabeza y se estrablece como la nueva cabeza
+ y el que estaba en esta posicion se como el siguiente y por ultimo incrementamos
+ el contador de la lista en 1 ya que se agrego una nueva mascota
+     */
 
     public void addPetToBeginning(Pet pet) throws ListDeException{
         NodeDE newNode = new NodeDE(pet);
@@ -223,6 +238,20 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
     }
 
 }
+/*
+algoritmo para el metodo get count pet location code
+iniciamos un contador en cero para asi ir llevando la cuenta de las
+mascotas encontrdas
+verifico si mi lista no esta vacia
+si esta no esta vacia creo un temp un ayudante que empiece desde la cabeza
+con unbucle recorremos toda la lista
+con este tambien verificamos el codigo de la ubicacion del nodo coincide con
+el codigo de la ubicacion que necesitan
+y si estos coinciden aumento el  contador y asi avazamos por cada nodo con el
+ayudante temp
+cuando ya el temporal termine de recorrer toda la lista devolvemos el contador
+que esta nos dira cuantas mascotas hay con este codigo de ubicacion.
+ */
 
     public int getCounPetLocCode(String code){
         int count =0;
@@ -270,7 +299,28 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
         }
         return female;
     }
-
+/*
+metodo para ordernar pro genero
+primero creo un cntador en ceroque la utilizo para controlar la posicion de
+insercion en la nueva lista copia
+se crea un temporal en cabeza de la lista original
+verifico si la lista no esta vacia y si esta vacia necesito una exepcion
+si la lista no esta vacia
+con un bucle se recorre la lista original mientras el temp no sea nulo
+dentro de este verifico el genero si es F (femenino )
+si es feemenino se agrega al inicio de lista copia y se utiliza el metodo agregar
+al inicio
+despues de esto reinicio el el temporal de la lista original cabeza
+inicio otro bucle para recorrer la lista
+y en este otro bucle verifico si es del genero M (masculino)
+y si es de este genero se agrega en una posicion especifica en una lista copia
+y utilizo el añadir en posicion
+despues de agregar se incrementa el contador en 2 para asegurar que las
+mascotas de genero masculino queden en distintas posiciones, separadas
+si el genero del nodo no es masculino se avanza al siguiente nodo
+y al final se actualiza la cabeza de la lista original para que cabeza
+de esta manera la lista original queda ordenada por el genero
+ */
     public void orderByGender() throws ListDeException {
         ListDE listDE1 = new ListDE();
         int sum = 0;
@@ -299,6 +349,27 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
             this.head = listDE1.getHead();
         }
     }
+    /*
+    metodo para perder posiciones se crea un ayudante temporal que empieza
+    en cabeza
+    se inicia tambien un contador que ayuda para el seguimiento de la posicion
+    en la lista
+    se creo una lista copia para guardar las mascotas ya modificadas o la posicion
+    se verifica si nuestra lista no esta vacia
+    si la lista no esta vacia se realiza un bucle para recorrer
+    la lista mientras el temporal no sea nulo
+    dentro de este nucleo se verifica si el codigo que sea diferente al codido
+    dek parametro
+    si este es diferente se agrega a la lista copia utilizando el metodo
+    añadir mascota
+    despues de recorrer toda la lista se calcula la nueva posicion con ayuda del
+    contador, despues con el codigo de la mascota sumado al resultado y el dato
+    de cuantas posiciones se quiere perder
+    se utiliza el metodo la validacion de añadir por posicion para agregar la mascota
+    con el codigo de la indentificacion especifico a la nueva lista con la nueva posicion
+    determinada por el contador
+    por ultimo se actualiza la cabeza de la lista original
+     */
     public void losePositions(String id, int lose) throws ListDeException {
         NodeDE temp = this.head;
         int sum = 0;
@@ -317,6 +388,20 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
         listDE1.addInPosValidations(getPetByid(id), sum);
         this.head = listDE1.getHead();
     }
+    /*
+    metodo para obtenr la posicion por la identificacion
+    se crea una ayudante temporal que inicia desde la cabeza
+    se crea un acumulador para llecar el conteo de las posiciones
+    se verifica que la lista no este vacia
+    si la lista no esta vacia
+    con un bucle se recorre toda la lista miesntras el temp no sea nulo
+    y el codigo de la identificacion coincida con el dato que ya nos dan
+    dentro de este bucle se incrementa el acumulador en 1 para contar la
+    posicion se avanza al siguiente nodo de la lista
+    despuies de esto se decuelve el acumulador que nos da la posiciond de
+    la mascota en nuestra lista si no se encuentra esta se decuelte 1
+
+     */
 
     public int getPosById(String id) {
         NodeDE temp = this.head;
@@ -330,6 +415,16 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
         }
         return acum;
     }
+    /*
+    se cra un ayudante temporal que se inicia desde la cabeza de la lista
+    se verifica que la lista no este vacia
+    si esta lista no esta vacia se crea un bucle que recorre toda la lista mientras
+    el costal no sea nulo dentro de este se verifica que el codigo de la id
+    coincida con el dato que nos dan si estos coinciden se devuelve la mascota
+    se avanza al siguiente nodo de la lista
+    sino se encuntre ninguna mascota con este codigo de id se retorna un null
+    ya que esta no esta en la lista
+     */
 
     public Pet getPetByid(String identification) throws ListDeException{
         NodeDE temp = head;
@@ -345,10 +440,21 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
 
     }
 
+    /*
+    este metodo para cambiar los extremo de la lista
+    primero se verifica que esta lista no este vacia y si no tiene menos de
+    de dos datos yq que con solo un dato no se puede intercambiar los
+    extremos de la lista
+    si cumple con esto se crea un ayudante que inicia desde la cabeza
+    y con un bucle se recorre la lista hsata llegar al final de la lista
+    luego se realiza el intercambio de los datos del final con los del inico
+    de la lista
+    se guarda un copia de los datos del primero en la lisat
+    se actualiza los datos de la cabeza con los datos del ultimo
+    de la lista
+    y estos mismo pero con los datos del inicio para el final de la lista
 
-
-
-
+     */
 
     public void changeExtremes() throws ListDeException {
         if(head!=null && head.getNext()!=null) {
@@ -361,7 +467,20 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
             temp.setData(copy);
         }
     }
-
+/*
+el metodo inverti la lista
+se crea unayudante temporal que inicia desde la cabeza de la lista
+se crea una lista copia para guardar los datos que se invirtieron
+se verifica si la lista no esta vacia
+si esta no esta vacia entonces
+con un bucle se recorre la lista original desde el inico hasta el final
+a cada una se le toma y se agrega al incio de nueva lista utilizando el metodo
+agregar al inicio de la lista
+por ultimo se actualiza la cabeza la lista original para que esta apunte a la
+cabeza de la otra lista
+y si esta lista es vacia se debe mandar una exepcion que no hay datos para hacer este
+metodo
+ */
     public void invert() {
         NodeDE temp = this.head;
         ListDE listDE2 = new ListDE();
@@ -375,6 +494,22 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
             throw new ListDeException("400","No hay suficientes datos en la lista");
         }
     }
+    /*
+    netodo para put pet begibning
+    se creao un ayudante temporal y este se inicia en la cabeza
+    se crea un alista copia
+    se verifica si la lista si no esta vacia
+    si esta no esta vacia entonces
+    con un bucle se recorre toda la lista por cada nod se verifica el genero de
+    cada mascota
+    si el genro de la mascota es de genro masculino se agregar al inicio de la lista
+    con el metodo agrgar al incio de la lista
+    si esta es de genero femenino se agrega al final de la lista con el metod
+    añadir
+    se actualiza la cabeza de la lista original parq ue queden organizada con
+    los genros masculinos al inicio y los femeninos al final de la lista
+
+     */
     public void putPetBeginning() {
         NodeDE temp = this.head;
         ListDE listDE1 = new ListDE();
@@ -417,7 +552,18 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
         }
     }
 
-
+/*
+metodo para saber el promedio de la edad de las mascotas
+se crea la variable promedio de edad que inicia en 0
+se crea un ayudante que empiece desde la caebeza de la lista
+se cerifica qeu la lisat no este vacia
+si esta no esta vacia se hace un bucle que recorra la lista
+en cada uno de los nodos que pase recoje la edad de cada uno de estos y se suma
+al promedio de edad
+depues de recorrer toda la lista y obtener las edadesd e cada uno de la lista
+se calcula el promedio de esta dividiendo el promedio de la edad con el tamaño de
+la lista finalmente se decuelve la edad promedio de la lisata
+ */
     public double getHalfAgeDog()throws ListDeException {
         double averageAge = 0;
         NodeDE temp = this.head;
@@ -455,7 +601,22 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
         }
         this.head = listDE1.getHead();
     }
-
+/*
+metod para generar un reporte por las edades
+se crean variables iniciadas en 0 para controlar la cantidad de mascotas en
+cada rango de edad
+se crea un ayudante temp que inicia desde la cabeza de la lista
+se verifica que la lista no este vacia
+si la lista no esta vacia
+con un bucle recorro toda la lista
+en cada nodo se obtine la edad actual de cada perro
+y se verifica en que rango de eadad esta
+dependiendo el rango de edad se incrementa las variables
+luego se avanza por cada nodo
+despues de recorre toda la lista se hace un informe en cadena que muestra
+la cantidad de perros en cada rango de edad
+y a lo ultimo se devuelve el informe que se genero
+ */
     public String ReportByage() {
         int quantity1 = 0;
         int quantity2 = 0;
@@ -505,6 +666,18 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
         return sb.toString();
 
     }
+    /*
+    metodo para verificar por la identificacion
+    se crea un ayudante temporal que se para en la caebza de la lista
+    se crea un booleano que inicia en falso para asi encontrar la mascota con
+    este id
+    se inicia un bucle que recorre toda la lista
+    en cada nodo o costal se compara la id para ver si esta la id que se requiere verificar
+    si la id se encuentra se actuliaza el booleano a verdadero y se rompe el ciclo
+    si las id son diferentes se avanza poe toda la lista hasta encontrar esta id
+    depsues de recorrer toda la lista se devuelve un valor entero 1 y si no
+    en un valor de 0
+     */
     public int verifyID(Pet pet) {
         NodeDE temp = this.head;
         boolean found = false;
@@ -517,7 +690,21 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
         }
         return found ? 1 : 0;
     }
-
+/*
+metodo para enviar por un caracter al final de la lista
+se cre una lista copia para ahi guardar las mascotas ya organizadas
+se crea un ayudante tempoal que se para en la cabaza de la lista
+se verifica que la lista no este vacia
+si la lista no esta vacia
+con un bucle que se recorre toda la lista
+en cada nodo se obtine el nombre de la mascota y se verifica que el primer caracter
+que tiene en el nombre es diferente al que nos estan pidiendo
+si el caracter es diferente, se agrega al principio de la nueva lista con el metodo
+agregar el inicio
+si el primer caracter es igual se agrega la mascota al final de la lista copia
+depues de recorrer toda la lista se actualiza la lista original la cabeza con la
+cabeza de la lisat copia
+ */
     public void sendPetsToEndByChar(char user) throws ListDeException {
         ListDE listDE1 = new ListDE();
         NodeDE temp = this.head;
@@ -535,7 +722,17 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
         }
         this.head = listDE1.getHead();
     }
-
+/*
+metodo par ver la lista
+se crea un array para lamacenar los datos de la lista
+se verifica que la cabeza no sea nulo o que tenga datos la lsita
+se la lista no es vacia se crea un ayudante temporal que se inicia desde
+la cabeza
+se utiliza un bucle par recorrer la lista y ir agregando los datos al array
+despues de agregar los datros se actualiza el ayudante para que este siga
+con el otro de la lista  y este bucle sigue hasta el final de la lista
+y al final de este se retorna los dato que recogio la lista
+ */
     public ArrayList<Pet> showList() {
         ArrayList<Pet> pets = new ArrayList<>();
         if (this.head != null) {
@@ -549,6 +746,20 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
         return pets;
 
     }
+    /*
+    metodo add in position validation
+    se crea el ayudante temporal que se posiciona en la cabeza de la lista
+    se crea un nuevo nodo o costal con la mascota que se desea agregar
+    se obtiene la longitud de la lista
+    se hace una validacion de la posicion
+    si la posicion es menor o mayor que 0 o es igual a la longitud de la lisat
+    se agrega la mascota al finalde la llista
+    si la posicion es igual a 0 se pone como el nodo anterior de la cabeza actual
+    si la posicion no es de 0 y esta entre los limites de la lisat se realiza un
+    bucle para llegar alnodo anterior a la posicion deseada
+    una vez ya ubicado en el nod anterior, se organizan los enlaces del nodo nuevo
+    con el anterior.
+     */
     public void addInPosValidations(Pet pet, int pos2) throws ListDeException {
         NodeDE temp = head;
         NodeDE newNode = new NodeDE(pet);
@@ -571,6 +782,18 @@ public void addPetInPos(Pet pet, int pos2) throws ListDeException {
             temp.getNext().setPrevious(newNode);
         }
     }
+    /*
+    metodo para obtener la longitud de la lista
+    se inicia un contador en 0 para llavr el conteo de la longitud de esta
+    lista
+    se crea un temporal o ayudante que se inicia desde la cabeza
+    se utiliza un bucle par recorrer toda la lista
+    en cada nodo que pase el bucle se incrementa el contador
+    depues de incrementar el contador, se actualiza el ayudante par que pase al
+    siginte de la lista
+    el bucle continua hasta que recorra toda la lista hasta el final
+    y por ultimo de retorna el total del contador
+     */
     public int getLength() {
         int total = 0;
         NodeDE temp = head;

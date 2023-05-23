@@ -32,4 +32,6 @@ public class Pet{
     @NotNull
     private Location location;
 
+    private boolean shower;
+
 }

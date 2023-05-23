@@ -10,4 +10,5 @@ public class PetDTO {
     private char gender;
     private String identification;
     private String codeLocation;
+    private boolean shower;
 }
