@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class ListDE {
     private NodeDE head;
     private int size;
+    private boolean pos;
 
     /*
 METODO AÑADIR UNA MASCOTA:
@@ -405,9 +406,9 @@ de esta manera la lista original queda ordenada por el genero
 
     public int getPosById(String id) {
         NodeDE temp = this.head;
-        int acum = 1;
+        int acum = 0;
         if (head != null) {
-            while (temp != null && temp.getData().getIdentification().equals(id)) {
+            while (temp != null && !temp.getData().getIdentification().equals(id)) {
                 acum = acum + 1;
                 temp = temp.getNext();
 
@@ -578,28 +579,86 @@ la lista finalmente se decuelve la edad promedio de la lisata
             throw new ListDeException("400","No hay datos en la lista");
         }
     }
+    public void earnPositions(String id , int win )throws ListDeException{
+       if(head !=null){
+           int pos = getPosById(id);
+           if ((pos >0 )&&(verifypos(win,getPosById(id))==true)){
+               int i=0;
+               NodeDE temp = this.head;
+               while (i< pos){
+                   temp = temp.getNext();
+                   i++;
 
-    public void earnPositions(String id, int win)  {
-        NodeDE temp = this.head;
-        int sum = 0;
-        ListDE listDE1 = new ListDE();
-        if (head != null) {
-            while (temp != null) {
-                if (!temp.getData().getIdentification().equals(id)) {
-                    listDE1.addPet(temp.getData());
-                    temp = temp.getNext();
-                } else {
-                    temp = temp.getNext();
+               }//fin del bucle
+               int j=0;
+               pos = getPosById(id);
+               NodeDE tempSa = this.head;
+               while (j<(1-(pos-win))) {
+                   tempSa = tempSa.getNext();
+                   j++;
+               }//fin del mientra para el temporal del salto
+               Pet varData;
+               varData = temp.getData();
+               deletePet(id);
+               NodeDE newNode =new NodeDE(varData);
+               newNode.setPrevious(tempSa);
+               newNode.setNext(tempSa.getNext());
+               tempSa.getNext().setPrevious(newNode);
+               tempSa.setNext(newNode);
+           }else{
+               throw new ListDeException("400","no es posible adelantar tantas posiciones");// fin de verificar las pos de los datos
+           }
+
+       }//fin de verificar fin de lista
+
+    }//fin del metodo ganar pos
+
+    /*
+    public void earnPositions(String id, int win)  throws ListDeException{
+        if (verifypos(win,getPosById(id))==true) {
+            NodeDE temp = this.head;
+            int sum = 0;
+            ListDE listDE1 = new ListDE();
+            if (head != null) {
+                while (temp != null) {
+                    if (!temp.getData().getIdentification().equals(id)) {
+                        listDE1.addPet(temp.getData());
+                        temp = temp.getNext();
+                    } else {
+                        temp = temp.getNext();
+                    }
                 }
             }
-        }if (win!=1){
-            sum = win-getPosById(id) ;
-            listDE1.addInPosValidations(getPetByid(id), sum);
+            if (win != 1) {
+                sum = win - getPosById(id);
+                listDE1.addInPosValidations(getPetByid(id), sum);
 
-        }else {
-            listDE1.addPetToBeginning(getPetByid(id));
+            } else {
+                listDE1.addPetToBeginning(getPetByid(id));
+            }
+            this.head = listDE1.getHead();
+        }else{
+            throw new ListDeException("400","la posición a ganar es mayor que la lista");
         }
-        this.head = listDE1.getHead();
+    }
+*/
+/*
+creo otro netodo que resiva el retorno del getposbyid
+como un parametro entero tambien el lose y que retorne un booolean
+cogo la posicion actual y le resta lose
+si el numero resultante es menor a 1 enronces retorne false
+si es positivo retorne true
+ */
+    public boolean verifypos(int win,int pos){
+        int ver = 0;
+        boolean very = false;
+        ver = pos - win;
+        if (ver <0){
+            return very;
+        }else{
+            very = true;
+            return very;
+        }
     }
 /*
 metod para generar un reporte por las edades

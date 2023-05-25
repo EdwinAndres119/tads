@@ -31,7 +31,7 @@ public class ListDEservice {
     public void putPetsMaleToBeginning(){pets.putPetBeginning();}
 
     public double getHalfAgeDog(){return pets.getHalfAgeDog();}
-    public void earnPositions(String id, int earn){pets.earnPositions(id,earn);}
+    public void earnPositions(String id, int earn)throws ListDeException{pets.earnPositions(id,earn);}
     public String ReportByage(){return pets.ReportByage();}
     public int getCounPetLocCode(String code){return pets.getCounPetLocCode(code);}
     public int getCountPetByLocCodeMale(String code){return pets.getCountPetByLocCodeMale(code);}

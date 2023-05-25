@@ -1,7 +1,8 @@
 package co.edu.umanizales.tads.exception;
 
+import lombok.Data;
 import org.springframework.http.HttpStatus;
-
+@Data
 public class RequestException extends RuntimeException {
     private int code;
     private HttpStatus status;

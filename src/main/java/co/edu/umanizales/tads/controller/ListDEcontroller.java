@@ -128,12 +128,16 @@ public class ListDEcontroller {
     }
 
     @PostMapping(path = "/earn_positions")
-    public ResponseEntity<ResponseDTO> earnPositions(@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<ResponseDTO> earnPositions(@RequestBody Map<String, Object> requestBody)throws ListDeException {
+        try {
             String id = (String) requestBody.get("id");
             Integer earn = (Integer) requestBody.get("earn");
             lisDEService.earnPositions(id, earn);
             return new ResponseEntity<>(new ResponseDTO(
                     200, "posiciones re ordenadas", null), HttpStatus.OK);
+        }catch (ListDeException e){
+            throw new RequestException(e.getCode(),e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping(path = "/add_pet_to_beginning")
